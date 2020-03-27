@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+    <footer th:fragment="header">
+        <div id="Header">
+
+            <div id="Logo">
+                <div id="LogoContent">
+                    <a href="main"><img src="../images/logo-topbar.gif" /></a>
+                </div>
+            </div>
+
+            <div id="Menu">
+                <div id="MenuContent">
+                    <a href="viewCart">
+                        <img align="middle" name="img_cart" src="../images/cart.gif" />
+                    </a>
+
+                    <img align="middle" src="../images/separator.gif" />
+
+                    <c:choose>
+                        <c:when test="${sessionScope.account == null}">
+                            <a href="viewSignOnForm">
+                                Sign In
+                            </a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="signOut">
+                                Sign Out
+                            </a>
+                        </c:otherwise>
+                    </c:choose>
+
+
+
+
+                    <c:if test="${account != null }">
+                        <img align="middle" src="../images/separator.gif" />
+                        <a href="viewEditAccountForm">My Account</a>
+                    </c:if>
+
+                    <img align="middle" src="../images/separator.gif" />
+
+                    <a href="../help.html">?</a>
+                </div>
+            </div>
+
+            <div id="Search">
+                <div id="SearchContent">
+                    <form action="search" method="post">
+                        <input type="text" name="keyword" size="14" /> <input type="submit"
+                                                                              name="searchProducts" value="Search" />
+                    </form>
+                </div>
+            </div>
+
+            <div id="QuickLinks">
+                <a href="viewCatalog?categoryId=FISH"><img
+                        src="../images/sm_fish.gif" /></a> <img src="../images/separator.gif" />
+                <a href="viewCatalog?categoryId=DOGS"><img
+                        src="../images/sm_dogs.gif" /></a> <img src="../images/separator.gif" />
+                <a href="viewCatalog?categoryId=REPTILES"><img
+                        src="../images/sm_reptiles.gif" /></a> <img
+                    src="../images/separator.gif" /> <a href="viewCatalog?categoryId=CATS"><img
+                    src="../images/sm_cats.gif" /></a> <img src="../images/separator.gif" />
+                <a href="viewCatalog?categoryId=BIRDS"><img
+                        src="../images/sm_birds.gif" /></a>
+            </div>
+
+        </div>
+    </footer>
+</body>
+</html>
