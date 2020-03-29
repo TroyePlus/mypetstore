@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+<header th:fragment="includeAccountFields">
+    <h3>Account Information</h3>
+
+    <table>
+        <tr>
+            <td>First name:</td>
+            <td><input type="text" name="firstName" value="${account.firstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td><input type="text" name="lastName" value="${account.lastName}"></td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td><input type="text" size="40" name="email" value="${account.email}"></td>
+        </tr>
+        <tr>
+            <td>Phone:</td>
+            <td><input type="text" name="phone" value="${account.phone}"></td>
+        </tr>
+        <tr>
+            <td>Address 1:</td>
+            <td><input type="text" size="40" name="address1" value="${account.address1}"></td>
+        </tr>
+        <tr>
+            <td>Address 2:</td>
+            <td><input type="test" size="40" name="address2" value="${account.address2}"></td>
+        </tr>
+        <tr>
+            <td>City:</td>
+            <td><input type="text" name="city" value="${account.city}"></td>
+        </tr>
+        <tr>
+            <td>State:</td>
+            <td><input type="text"size="4" name="state" value="${account.state}"></td>
+        </tr>
+        <tr>
+            <td>Zip:</td>
+            <td><input type="text" size="10" name="zip" value="${account.zip}"></td>
+        </tr>
+        <tr>
+            <td>Country:</td>
+            <td><input type="text" size="15" name="country" value="${account.country}"></td>
+        </tr>
+    </table>
+
+    <h3>Profile Information</h3>
+
+    <table>
+        <tr>
+            <td>Language Preference:</td>
+            <td>
+<!--                <%&#45;&#45;<stripes:select name="account.languagePreference">&#45;&#45;%>-->
+<!--                <%&#45;&#45;<stripes:options-collection collection="${sessionScope.languages}" />&#45;&#45;%>-->
+<!--                <%&#45;&#45;</stripes:select>&#45;&#45;%>-->
+<!--                <select name="langpref">-->
+<!--                    <option value="english" selected="selected">english</option>-->
+<!--                    <option value="japanese">japanese</option>-->
+<!--                </select>-->
+            </td>
+        </tr>
+        <tr>
+            <td>Favourite Category:</td>
+            <td>
+                <select name="favcategory">
+                    <option value="FISH">FISH</option>
+                    <option selected="selected" value="DOGS">DOGS</option>
+                    <option value="REPTILES">REPTILES</option>
+                    <option value="CATS">CATS</option>
+                    <option value="BIRDS">BIRDS</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>Enable MyList</td>
+            <td><input type="checkbox" name="listopt" value=1></td>
+        </tr>
+        <tr>
+            <td>Enable MyBanner</td>
+            <td><input type="checkbox" name="banneropt" value=1></td>
+        </tr>
+
+    </table>
+
+</header>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>信息编辑 MyPetStore</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
+</head>
+<body>
+<div th:replace="common/top" ></div>
+
+<div id="Catalog">
+    <form action="editAccount" method="post">
+
+        <h3>User Information</h3>
+
+        <table>
+            <tr>
+                <td>User ID:</td>
+                <td>${account.username}</td>
+            </tr>
+            <tr>
+                <td>New password:</td>
+                <td><input type="text" name="password"> </td>
+            </tr>
+            <tr>
+                <td>Repeat password:</td>
+                <td><input type="text" name="repeatedPassword"></td>
+            </tr>
+        </table>
+
+        <div th:replace="IncludeAccountFields" ></div>
+
+        <input type="submit" name="editAccount" value="Save Account Information">
+
+    </form>
+
+    <a href="viewListOrder?username=${sessionScope.account.username}">My Orders</a>
+</div>
+
+<div th:replace="common/bottom" ></div>
+
+</body>
+</html>
