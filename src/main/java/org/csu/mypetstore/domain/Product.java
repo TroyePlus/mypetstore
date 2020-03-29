@@ -1,9 +1,18 @@
 package org.csu.mypetstore.domain;
 
-public class Category {
+public class Product {
+    private String productId;
     private String categoryId;
     private String name;
     private String description;
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
 
     public String getCategoryId() {
         return categoryId;
@@ -31,12 +40,11 @@ public class Category {
 
     @Override
     public String toString() {
-        return "Category{" +
-                "categoryId='" + categoryId + '\'' +
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", categoryId='" + categoryId + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }
-
-
 }
