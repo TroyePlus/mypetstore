@@ -6,28 +6,29 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top" >
+<div th:replace="common/top">
 
 </div>
 
-<div id="Catalog">
-    <form action="viewSignOnForm" name="registerSuccess" method="post">
+<div id="Content">
+    <div id="Catalog">
+        <form action="viewSignOnForm" name="registerSuccess" method="post">
 
-        <h2>REGISTER SUCCESSFULLY!!!</h2>
+            <h2>REGISTER SUCCESSFULLY!!!</h2>
 
-        <table>
-            <tr>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" name="signInAgain" value="Jump">
-                </td>
-            </tr>
-        </table>
-    </form>
+            <table>
+                <tr>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" name="signInAgain" value="Jump">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
 </div>
-
-<div th:replace="common/bottom" >
+<div th:replace="common/bottom">
 
 </div>
 </body>

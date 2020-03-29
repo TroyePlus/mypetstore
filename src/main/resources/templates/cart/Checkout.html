@@ -6,65 +6,73 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top" >
+<div th:replace="common/top">
 
 </div>
 
-<div id="BackLink">
-    <a href="/viewCart">Return to Shopping Cart</a>
-</div>
+<div id="Content">
 
-<div id="Catalog">
+    <div id="BackLink">
+        <a href="/viewCart">Return to Shopping Cart</a>
+    </div>
 
-    <table>
-        <tr>
-            <td>
-                <h2>Checkout Summary</h2>
+    <div id="Catalog">
 
-                <table>
+        <table>
+            <tr>
+                <td>
+                    <h2>Checkout Summary</h2>
 
-                    <tr>
-                        <td><b>Item ID</b></td>
-                        <td><b>Product ID</b></td>
-                        <td><b>Description</b></td>
-                        <td><b>In Stock?</b></td>
-                        <td><b>Quantity</b></td>
-                        <td><b>List Price</b></td>
-                        <td><b>Total Cost</b></td>
-                    </tr>
+                    <table>
 
-                    <c:forEach var="cartItem" items="${sessionScope.cart.cartItems}">
                         <tr>
-                            <td>
-                                <a href="viewItem?itemId=${cartItem.item.itemId}">${cartItem.item.itemId}</a>
-                            </td>
-                            <td>${cartItem.item.product.productId}</td>
-                            <td>${cartItem.item.attribute1} ${cartItem.item.attribute2}
-                                ${cartItem.item.attribute3} ${cartItem.item.attribute4}
-                                ${cartItem.item.attribute5} ${cartItem.item.product.name}
-                            </td>
-                            <td>${cartItem.inStock}</td>
-                            <td>${cartItem.quantity}</td>
-                            <td><fmt:formatNumber value="${cartItem.item.listPrice}"
-                                                  pattern="$#,##0.00" /></td>
-                            <td><fmt:formatNumber value="${cartItem.total}"
-                                                  pattern="$#,##0.00" /></td>
+                            <td><b>Item ID</b></td>
+                            <td><b>Product ID</b></td>
+                            <td><b>Description</b></td>
+                            <td><b>In Stock?</b></td>
+                            <td><b>Quantity</b></td>
+                            <td><b>List Price</b></td>
+                            <td><b>Total Cost</b></td>
                         </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="7">Sub Total: <fmt:formatNumber
-                                value="${sessionScope.cart.subTotal}" pattern="$#,##0.00" /></td>
-                    </tr>
-                </table>
 
-            <td>&nbsp;</td>
+                        <c:forEach var="cartItem" items="${sessionScope.cart.cartItems}">
+                            <tr>
+                                <td>
+                                    <a href="viewItem?itemId=${cartItem.item.itemId}">${cartItem.item.itemId}</a>
+                                </td>
+                                <td>${cartItem.item.product.productId}</td>
+                                <td>${cartItem.item.attribute1} ${cartItem.item.attribute2}
+                                    ${cartItem.item.attribute3} ${cartItem.item.attribute4}
+                                    ${cartItem.item.attribute5} ${cartItem.item.product.name}
+                                </td>
+                                <td>${cartItem.inStock}</td>
+                                <td>${cartItem.quantity}</td>
+                                <td>
+                                    <fmt:formatNumber value="${cartItem.item.listPrice}"
+                                                      pattern="$#,##0.00"/>
+                                </td>
+                                <td>
+                                    <fmt:formatNumber value="${cartItem.total}"
+                                                      pattern="$#,##0.00"/>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        <tr>
+                            <td colspan="7">Sub Total:
+                                <fmt:formatNumber
+                                        value="${sessionScope.cart.subTotal}" pattern="$#,##0.00"/>
+                            </td>
+                        </tr>
+                    </table>
 
-        </tr>
-    </table>
+                <td>&nbsp;</td>
 
+            </tr>
+        </table>
+
+    </div>
 </div>
-
-<div th:replace="common/bottom" >
+<div th:replace="common/bottom">
 
 </div>
 </body>

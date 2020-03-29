@@ -6,52 +6,52 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top" >
+<div th:replace="common/top">
 
 </div>
 
-<div id="Catalog">
-    <form action="signIn" method="post">
-        <th:if test="${signMessage != null}">
-            ${signMessage}
-        </th:if>
+<div id="Content">
+    <div id="Catalog">
+        <form action="signIn" method="post">
+            <th:if test="${signMessage != null}">
+                ${signMessage}
+            </th:if>
 
-        <p>
-            Please enter your username and password.
-        </p>
+            <p>
+                Please enter your username and password.
+            </p>
 
-        <p>
-            Username:<input type="text"name="username" value="j2ee" ><br />
-            Password:<input type="password"name="password" value="j2ee" >
-        </p>
-        <input type="text"  name="image" placeholder="verification code">
-        <img src="/verifyCode" id="btn" ><br>
+            <p>
+                Username:<input type="text" name="username" value="j2ee"><br/>
+                Password:<input type="password" name="password" value="j2ee">
+            </p>
+            <input type="text" name="image" placeholder="verification code">
+            <img src="/verifyCode" id="btn"><br>
 
-        <th:if test="${imageMess != null}">
-            ${imageMess}
-            <br>
-        </th:if>
-
-
-        <input type="submit" name="signon" value="Login" >
+            <th:if test="${imageMess != null}">
+                ${imageMess}
+                <br>
+            </th:if>
 
 
-    </form>
-    Need a user name and password?
-    <a href="viewNewAccountForm" >Register Now!</a>
+            <input type="submit" name="signon" value="Login">
+
+
+        </form>
+        Need a user name and password?
+        <a href="viewNewAccountForm">Register Now!</a>
+    </div>
+
+    <%--js改变验证码函数定义--%>
+    <script type="text/javascript">
+        document.getElementById("btn").onclick = function () {   // 获取img元素
+            // 为了让浏览器发送请求到servlet, 所以一定要改变src
+            document.getElementById("btn").src =
+                "/verifyCode?time=" + new Date().getTime();
+        };
+    </script>
 </div>
-
-<%--js改变验证码函数定义--%>
-<script type="text/javascript">
-    document.getElementById("btn").onclick = function ()
-    {   // 获取img元素
-        // 为了让浏览器发送请求到servlet, 所以一定要改变src
-        document.getElementById("btn").src =
-            "/verifyCode?time=" + new Date().getTime();
-    };
-</script>
-
-<div th:replace="common/bottom" >
+<div th:replace="common/bottom">
 
 </div>
 </body>

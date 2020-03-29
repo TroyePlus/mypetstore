@@ -6,38 +6,37 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top" >
+<div th:replace="common/top"></div>
 
-</div>
+<div id="Content">
+    <div id="BackLink">
+        <a href="/main">Return to Main Menu</a>
+    </div>
 
-<div id="BackLink">
-    <a href="/main">Return to Main Menu</a>
-</div>
+    <div id="Catalog">
 
-<div id="Catalog">
+        <div id="Cart">
 
-    <div id="Cart">
+            <h2>Shopping Cart</h2>
 
-        <h2>Shopping Cart</h2>
-
-        <form action="updataCart" method="post">
-            <table id="quantity">
-                <tr>
-                    <th><b>Item ID</b></th>
-                    <th><b>Product ID</b></th>
-                    <th><b>Description</b></th>
-                    <th><b>In Stock?</b></th>
-                    <th><b>Quantity</b></th>
-                    <th><b>List Price</b></th>
-                    <th><b>Total Cost</b></th>
-                    <th>&nbsp;</th>
-                </tr>
-
-                <th:if test="${sessionScope.cart.numberOfItems == 0}">
+            <form action="updataCart" method="post">
+                <table id="quantity">
                     <tr>
-                        <td colspan="8"><b>Your cart is empty.</b></td>
+                        <th><b>Item ID</b></th>
+                        <th><b>Product ID</b></th>
+                        <th><b>Description</b></th>
+                        <th><b>In Stock?</b></th>
+                        <th><b>Quantity</b></th>
+                        <th><b>List Price</b></th>
+                        <th><b>Total Cost</b></th>
+                        <th>&nbsp;</th>
                     </tr>
-                </th:if>
+
+                    <th:if test="${sessionScope.cart.numberOfItems == 0}">
+                        <tr>
+                            <td colspan="8"><b>Your cart is empty.</b></td>
+                        </tr>
+                    </th:if>
 
                     <tr th:each="">
                         <td>
@@ -59,72 +58,71 @@
                         </td>
                         <td>
                             <fmt:formatNumber value="${cartItem.item.listPrice}"
-                                              pattern="$#,##0.00" />
+                                              pattern="$#,##0.00"/>
                         </td>
                         <td id="${cartItem.item.itemId}">
                             $${cartItem.total}
                         </td>
                         <td>
-                            <a href="removeItemFromCart?cartItem=${cartItem.item.itemId}" class = "Button">Remove</a>
+                            <a href="removeItemFromCart?cartItem=${cartItem.item.itemId}" class="Button">Remove</a>
                         </td>
                     </tr>
 
-                <tr>
-                    <td colspan="7" id="subTotal">
-                        Sub Total: ${sessionScope.cart.subTotal}
-                        <%--<<input type="submit" name="updateCartQuantities" value="Update Cart">--%>
-                    <td>&nbsp;</td>
-                </tr>
-            </table>
+                    <tr>
+                        <td colspan="7" id="subTotal">
+                            Sub Total: ${sessionScope.cart.subTotal}
+                            <%--<<input type="submit" name="updateCartQuantities" value="Update Cart">--%>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
 
-        </form>
+            </form>
 
-        <th:if test="${sessionScope.cart.numberOfItems > 0}">
-            <a href="/viewCartChart">View My Cart</a><br>
-            <a href="newOrderForm">Proceed to Checkout</a>
+            <th:if test="${sessionScope.cart.numberOfItems > 0}">
+                <a href="/viewCartChart">View My Cart</a><br>
+                <a href="newOrderForm">Proceed to Checkout</a>
 
-        </th:if>
+            </th:if>
+
+        </div>
+
+        <div id="Separator">&nbsp;</div>
 
     </div>
 
-    <div id="Separator">&nbsp;</div>
+    <script>
+        var number;
+        var itemId;
+        $(function () {
+            $(document).off("change", "input").on("change", "input", function () {
+                number = $(this).val();
+                itemId = $(this).attr("name");
+                console.log(number);
+                console.log(itemId);
 
-</div>
+                $.ajax(
+                    {
+                        url: "/updataCart?time=" + new Date().getTime(),
+                        data: {"number": number, "itemId": itemId},
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(data.total);
+                            $("#" + itemId + "").text("$" + data.total);
 
-<script>
-    var number;
-    var itemId;
-    $(function () {
-        $(document).off("change","input").on("change","input",function () {
-            number  = $(this).val();
-            itemId  = $(this).attr("name");
-            console.log(number);
-            console.log(itemId);
+                            $("#subTotal").text("Sub Total:" + data.subTotal);
 
-            $.ajax(
-                {
-                    url:"/updataCart?time=" + new Date().getTime(),
-                    data:{"number":number,"itemId":itemId},
-                    type:"GET",
-                    dataType:"json",
-                    success:function (data) {
-                        console.log(data.total);
-                        $("#"+itemId+"").text("$"+data.total);
-
-                        $("#subTotal").text("Sub Total:"+data.subTotal);
+                        }
 
                     }
+                )
 
-                }
-
-            )
+            })
 
         })
-
-    })
-</script>
-
-<div th:replace="common/bottom" >
+    </script>
+</div>
+<div th:replace="common/bottom">
 
 </div>
 </body>

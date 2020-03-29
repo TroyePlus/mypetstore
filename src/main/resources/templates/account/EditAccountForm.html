@@ -6,38 +6,41 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top" ></div>
+<div th:replace="common/top"></div>
 
-<div id="Catalog">
-    <form action="editAccount" method="post">
+<div id="Content">
 
-        <h3>User Information</h3>
+    <div id="Catalog">
+        <form action="editAccount" method="post">
 
-        <table>
-            <tr>
-                <td>User ID:</td>
-                <td>${account.username}</td>
-            </tr>
-            <tr>
-                <td>New password:</td>
-                <td><input type="text" name="password"> </td>
-            </tr>
-            <tr>
-                <td>Repeat password:</td>
-                <td><input type="text" name="repeatedPassword"></td>
-            </tr>
-        </table>
+            <h3>User Information</h3>
 
-        <div th:replace="IncludeAccountFields" ></div>
+            <table>
+                <tr>
+                    <td>User ID:</td>
+                    <td>${account.username}</td>
+                </tr>
+                <tr>
+                    <td>New password:</td>
+                    <td><input type="text" name="password"></td>
+                </tr>
+                <tr>
+                    <td>Repeat password:</td>
+                    <td><input type="text" name="repeatedPassword"></td>
+                </tr>
+            </table>
 
-        <input type="submit" name="editAccount" value="Save Account Information">
+            <div th:replace="IncludeAccountFields"></div>
 
-    </form>
+            <input type="submit" name="editAccount" value="Save Account Information">
 
-    <a href="viewListOrder?username=${sessionScope.account.username}">My Orders</a>
+        </form>
+
+        <a href="viewListOrder?username=${sessionScope.account.username}">My Orders</a>
+    </div>
 </div>
 
-<div th:replace="common/bottom" ></div>
+<div th:replace="common/bottom"></div>
 
 </body>
 </html>
