@@ -1,10 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
+<div th:replace="common/top" >
 
+</div>
+
+<div id="Catalog">
+    <form action="register" name="register" method="post">
+
+        <h3>User Information</h3>
+
+        <table>
+            <tr>
+                <td>User ID:</td>
+                <td><input type="text" name="username" id="username"> </td>
+                <span id="isExit"></span>
+            </tr>
+            <tr>
+                <td>New password:</td>
+                <td><input type="text" name="password"> </td>
+            </tr>
+            <tr>
+                <td>Repeat password:</td>
+                <td><input type="text" name="repeatedPassword"> </td>
+            </tr>
+            <tr>
+                <td><img src="/verifyCode" id="btn" ><br></td>
+                <td><input type="text"  name="image" placeholder="verification code"></td>
+                <th:if test="${imageMess != null}">
+                    ${imageMess}
+                    <br>
+                </th:if>
+            </tr>
+        </table>
+
+        <div th:replace="IncludeAccountFields" ></div>
+
+        <input type="submit" name="newAccount" value="Save Account Information" >
+
+    </form>
+</div>
+
+<%--js改变验证码函数定义--%>
+<script type="text/javascript">
+    document.getElementById("btn").onclick = function ()
+    {   // 获取img元素
+        // 为了让浏览器发送请求到servlet, 所以一定要改变src
+        document.getElementById("btn").src =
+            "/verifyCode?time=" + new Date().getTime();
+    };
+
+    $(function () {
+        $("#username").on("blur",function () {
+            var name = $(this).val();
+            $.ajax({
+                url:"checkUsername",
+                data:{
+                    "username":name
+                },
+                type:"POST",
+                dataType:"json",
+                success:function (data) {
+                    // var str = JSON.stringify(data);
+                    console.log(data.isExit);
+                    if(data.isExit == "yes"){
+                        $("#isExit").text("can not use")
+                    }
+                    else{
+                        $("#isExit").text("can use")
+                    }
+
+                }
+
+            })
+
+        })
+
+
+    })
+</script>
+
+<div th:replace="common/bottom" >
+
+</div>
 </body>
 </html>

@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
+<div th:replace="common/top" >
 
+</div>
+
+<div id="BackLink">
+    <a href="/main">Return to Main Menu</a>
+</div>
+
+<div id="Catalog">
+
+    <table>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Product ID</th>
+            <th>Name</th>
+        </tr>
+        <c:forEach var="product" items="${sessionScope.productList}">
+            <tr>
+                <td>
+                    <a href="viewProduct?productId=${product.productId}">${product.description}</a>
+                </td>
+                <td>
+                    <b>
+                        <a href="viewProduct?productId=${product.productId}"><font color="BLACK"> ${product.productId} </font></a>
+                    </b>
+                </td>
+                <td>${product.name}</td>
+            </tr>
+        </c:forEach>
+        <tr>
+            <td></td>
+        </tr>
+
+    </table>
+
+</div>
+
+<div th:replace="common/bottom" >
+
+</div>
 </body>
 </html>
