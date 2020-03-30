@@ -12,7 +12,7 @@
 
 <div id="Content">
     <div id="BackLink">
-        <a href="viewCatalog?categoryId=${sessionScope.product.categoryId}">Return to
+        <a href="/catalog/viewCategory?categoryId=${sessionScope.product.categoryId}">Return to
             ${sessionScope.product.categoryId}</a>
     </div>
 
@@ -32,7 +32,7 @@
             <c:forEach var="item" items="${sessionScope.itemList}">
                 <tr>
                     <td>
-                        <a href="viewItem?itemId=${item.itemId}">${item.itemId}</a>
+                        <a href="/catalog/viewItem?itemId=${item.itemId}">${item.itemId}</a>
                     </td>
                     <td>${item.product.productId}</td>
                     <td>${item.attribute1} ${item.attribute2} ${item.attribute3}
