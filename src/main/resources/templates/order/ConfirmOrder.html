@@ -2,13 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>确认订单 MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top">
 
-</div>
+<header th:replace="common/top"></header>
 
 <div id="Content">
     <div id="BackLink">
@@ -22,7 +21,9 @@
                 <th align="center" colspan="2"><font size="4"><b>Order</b></font>
                     <br/>
                     <font size="3"><b>
-                        <fmt:formatDate value="${sessionScope.order.orderDate}" pattern="yyyy/MM/dd hh:mm:ss"/>
+                        <span th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}">
+                            date</span>
+                        <!--                        <fmt:formatDate value="${sessionScope.order.}" pattern="yyyy/MM/dd hh:mm:ss"/>-->
                     </b></font>
                 </th>
             </tr>
@@ -32,50 +33,49 @@
             </tr>
             <tr>
                 <td>First name:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billToFirstName}"/>
+                <td th:value="${order.billToFirstName}">
                 </td>
             </tr>
             <tr>
                 <td>Last name:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billToLastName}"/>
+                <td th:value="${order.billToLastName}">
+                    <!--                    <c:out value="${sessionScope.order.billTo}"/>-->
                 </td>
             </tr>
             <tr>
                 <td>Address 1:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billAddress1}"/>
+                <td th:value="${order.billAddress1}">
+                    <!--                    <c:out value="${sessionScope.order.billAddress1}"/>-->
                 </td>
             </tr>
             <tr>
                 <td>Address 2:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billAddress2}"/>
+                <td th:value="${order.billAddress2}">
+                    <!--                    <c:out value="${sessionScope.order.billAddress2}"/>-->
                 </td>
             </tr>
             <tr>
                 <td>City:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billCity}"/>
+                <td th:value="${order.billCity}">
+
                 </td>
             </tr>
             <tr>
                 <td>State:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billState}"/>
+                <td th:value="${order.billState}">
+
                 </td>
             </tr>
             <tr>
                 <td>Zip:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billZip}"/>
+                <td th:value="${order.billZip}">
+
                 </td>
             </tr>
             <tr>
                 <td>Country:</td>
-                <td>
-                    <c:out value="${sessionScope.order.billCountry}"/>
+                <td th:value="${order.billCountry}">
+
                 </td>
             </tr>
             <tr>
@@ -83,50 +83,47 @@
             </tr>
             <tr>
                 <td>First name:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipToFirstName}"/>
+                <td th:value="${order.shipToFirstName}">
+
                 </td>
             </tr>
             <tr>
                 <td>Last name:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipToLastName}"/>
+                <td th:value="${order.shipToLastName}">
                 </td>
             </tr>
             <tr>
                 <td>Address 1:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipAddress1}"/>
+                <td th:value="${order.shipAddress1}">
+
                 </td>
             </tr>
             <tr>
                 <td>Address 2:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipAddress2}"/>
+                <td th:value="${order.shipAddress2}">
+
                 </td>
             </tr>
             <tr>
                 <td>City:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipCity}"/>
+                <td th:value="${order.shipCity}">
+
                 </td>
             </tr>
             <tr>
                 <td>State:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipState}"/>
+                <td th:value="${order.shipState}">
+
                 </td>
             </tr>
             <tr>
                 <td>Zip:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipZip}"/>
+                <td th:value="${order.shipZip}">
                 </td>
             </tr>
             <tr>
                 <td>Country:</td>
-                <td>
-                    <c:out value="${sessionScope.order.shipCountry}"/>
+                <td th:value="${order.shipCountry}">
                 </td>
             </tr>
 
@@ -135,7 +132,7 @@
     </div>
 
 </div>
-<div th:replace="common/bottom">
+<footer th:replace="common/bottom"></footer>
 
 </div>
 </body>

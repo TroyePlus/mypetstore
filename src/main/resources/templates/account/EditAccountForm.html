@@ -6,23 +6,23 @@
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top"></div>
+<header th:replace="common/top"></header>
 
 <div id="Content">
 
     <div id="Catalog">
-        <form action="editAccount" method="post">
+        <form action="editAccount" method="post" th:object="${account}">
 
             <h3>User Information</h3>
 
             <table>
                 <tr>
                     <td>User ID:</td>
-                    <td>${account.username}</td>
+                    <td th:text="*{username}"></td>
                 </tr>
                 <tr>
                     <td>New password:</td>
-                    <td><input type="text" name="password"></td>
+                    <td><input type="password" th:field="*{password}" /></td>
                 </tr>
                 <tr>
                     <td>Repeat password:</td>
@@ -30,17 +30,17 @@
                 </tr>
             </table>
 
-            <div th:replace="IncludeAccountFields"></div>
+            <div th:replace="account/IncludeAccountFields::includeAccountFields"></div>
 
             <input type="submit" name="editAccount" value="Save Account Information">
 
         </form>
 
-        <a href="viewListOrder?username=${sessionScope.account.username}">My Orders</a>
+        <a href="#">My Orders</a>
     </div>
 </div>
 
-<div th:replace="common/bottom"></div>
+<footer th:replace="common/bottom"></footer>
 
 </body>
 </html>

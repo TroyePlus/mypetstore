@@ -2,17 +2,17 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>新订单 MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top">
 
-</div>
+<header th:replace="common/top"></header>
+
 <div id="Content">
     <div id="Catalog">
-        <form action="conFirmOrderForm" method="post">
-            <table>
+        <form action="conFirmOrderForm" method="post" th:object="${order}">
+            <table >
                 <tr>
                     <th colspan=2>Payment Details</th>
                 </tr>
@@ -45,49 +45,50 @@
                 <tr>
                     <td>First name:</td>
                     <td>
-                        <input type="text" name="billToFirstName" value="${sessionScope.order.billToFirstName}"/>
+                        <input type="text" th:value="*{billToFirstName}" name="billToFirstName"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Last name:</td>
                     <td>
-                        <input type="text" name="billToLastName" value="${sessionScope.order.billToLastName}"/>
+                        <input type="text" name="billToLastName" th:value="*{billToLastName}"/>
+                        <!--                        <input type="text" name="billToLastName" value="${sessionScope.order.billToLastName}"/>-->
                     </td>
                 </tr>
                 <tr>
                     <td>Address 1:</td>
                     <td>
-                        <input type="text" size="40" name="billAddress1" value="${sessionScope.order.billAddress1}"/>
+                        <input type="text" size="40" name="billAddress1" th:value="*{billAddress1}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Address 2:</td>
                     <td>
-                        <input type="text" size="40" name="billAddress2" value="${sessionScope.order.billAddress2}"/>
+                        <input type="text" size="40" name="billAddress2" th:value="*{billAddress2}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>City:</td>
                     <td>
-                        <input type="text" name="billCity" value="${sessionScope.order.billCity}"/>
+                        <input type="text" name="billCity" th:value="*{billCity}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>State:</td>
                     <td>
-                        <input type="text" size="4" name="billState" value="${sessionScope.order.billState}"/>
+                        <input type="text" size="4" name="billState" th:value="*{billState}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Zip:</td>
                     <td>
-                        <input type="text" size="10" name="billZip" value="${sessionScope.order.billZip}"/>
+                        <input type="text" size="10" name="billZip" th:value="*{billZip}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Country:</td>
                     <td>
-                        <input type="text" size="15" name="billCountry" value="${sessionScope.order.billCountry}"/>
+                        <input type="text" size="15" name="billCountry" th:value="*{billCountry}"/>
                     </td>
                 </tr>
 
@@ -102,8 +103,6 @@
         </form>
     </div>
 </div>
-<div th:replace="common/bottom">
-
-</div>
+<footer th:replace="common/bottom"></footer>
 </body>
 </html>

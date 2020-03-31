@@ -2,28 +2,28 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>注册新用户 MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top"></div>
+<header th:replace="common/top"></header>
 
 <div id="Content">
 
     <div id="Catalog">
-        <form action="register" name="register" method="post">
+        <form action="register" name="register" method="post" th:object="${newAccount}">
 
             <h3>User Information</h3>
 
             <table>
                 <tr>
                     <td>User ID:</td>
-                    <td><input type="text" name="username" id="username"></td>
+                    <td><input type="text" th:field="*{username}"></td>
                     <span id="isExit"></span>
                 </tr>
                 <tr>
                     <td>New password:</td>
-                    <td><input type="text" name="password"></td>
+                    <td><input type="password" th:field="*{password}" /></td>
                 </tr>
                 <tr>
                     <td>Repeat password:</td>
@@ -32,14 +32,18 @@
                 <tr>
                     <td><img src="/verifyCode" id="btn"><br></td>
                     <td><input type="text" name="image" placeholder="verification code"></td>
-                    <th:if test="${imageMess != null}">
-                        ${imageMess}
-                        <br>
-                    </th:if>
+                    <!--                    <c:if test="${imageMess != null}">-->
+                    <!--                        ${imageMess}-->
+                    <!--                        <br>-->
+                    <!--                    </c:if>-->
+                </tr>
+                <tr th:if="${imageMess}">
+                    <p th:value="${imageMess}"/>
+                    <br>
                 </tr>
             </table>
 
-            <div th:replace="IncludeAccountFields"></div>
+            <div th:replace="account/IncludeAccountFields::includeAccountFields"></div>
 
             <input type="submit" name="newAccount" value="Save Account Information">
 
@@ -84,6 +88,6 @@
     </script>
 </div>
 
-<div th:replace="common/bottom"></div>
+<footer th:replace="common/bottom"></footer>
 </body>
 </html>

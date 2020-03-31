@@ -2,13 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top">
-
-</div>
+<header th:replace="common/top"></header>
 
 <div id="Content">
     <div id="BackLink">
@@ -17,7 +15,7 @@
 
     <div id="Catalog">
 
-        <h2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${sessionScope.category.name}</h2>
+        <h2 th:text="${category.name}">Category Name</h2>
 
 
         <table>
@@ -25,12 +23,19 @@
                 <th>Product ID</th>
                 <th>Name</th>
             </tr>
-            <c:forEach var="product" items="${productList}">
-                <tr>
-                    <td><a href="viewProduct?productId=${product.productId}">${product.productId}</a></td>
-                    <td>${product.name}</td>
-                </tr>
-            </c:forEach>
+            <tr th:each="product:${productList}">
+                <td><a th:href="@{/catalog/viewProduct?productId=}+${product.productId}" th:text="${product.productId}">Product
+                    ID</a></td>
+                <td th:text="${product.name}">Product Name</td>
+
+            </tr>
+
+            <!--            <c:forEach var="product" items="${productList}">-->
+            <!--                <tr>-->
+            <!--                    <td><a href="viewProduct?productId=${product.productId}">${product.productId}</a></td>-->
+            <!--                    <td>${product.name}</td>-->
+            <!--                </tr>-->
+            <!--            </c:forEach>-->
         </table>
 
     </div>
@@ -38,6 +43,5 @@
 </div>
 <div th:replace="common/bottom">
 
-</div>
 </body>
 </html>

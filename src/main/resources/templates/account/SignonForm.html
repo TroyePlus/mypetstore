@@ -2,20 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>登录 MyPetStore</title>
     <link rel="StyleSheet" href="../css/jpetstore.css" type="text/css" media="screen"/>
 </head>
 <body>
-<div th:replace="common/top">
-
-</div>
+<header th:replace="common/top"></header>
 
 <div id="Content">
     <div id="Catalog">
-        <form action="signIn" method="post">
-            <th:if test="${signMessage != null}">
-                ${signMessage}
-            </th:if>
+        <form action="signOn" method="post">
+
+            <div th:if="${signMessage}">
+                <p th:value="${signMessage}"/>
+            </div>
+            <!--            <c:if test="${signMessage != null}">-->
+            <!--                ${signMessage}-->
+            <!--            </c:if>-->
 
             <p>
                 Please enter your username and password.
@@ -28,10 +30,11 @@
             <input type="text" name="image" placeholder="verification code">
             <img src="/verifyCode" id="btn"><br>
 
-            <th:if test="${imageMess != null}">
-                ${imageMess}
-                <br>
-            </th:if>
+            <p th:if="${msg!=null}" th:text="${msg}"></p>
+            <!--            <c:if test="${imageMess != null}">-->
+            <!--                ${imageMess}-->
+            <!--                <br>-->
+            <!--            </c:if>-->
 
 
             <input type="submit" name="signon" value="Login">
@@ -51,7 +54,7 @@
         };
     </script>
 </div>
-<div th:replace="common/bottom">
+<footer th:replace="common/bottom"></footer>
 
 </div>
 </body>
