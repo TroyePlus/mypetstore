@@ -16,6 +16,15 @@ public class Item {
     private String attribute5;
     private Product product;
     private int quantity;
+    private boolean inStock;
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
+    }
 
     public String getItemId() {
         return itemId;
