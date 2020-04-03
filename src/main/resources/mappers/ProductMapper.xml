@@ -33,4 +33,12 @@
     WHERE lower(name) like #{value}
   </select>
 
+  <select id="getProductName" parameterType="String" resultType="String">
+    SELECT name from product where name like  concat('%',#{name},'%')
+  </select>
+
+  <select id="getAllName"  resultType="String">
+    SELECT name from product
+  </select>
+
 </mapper>

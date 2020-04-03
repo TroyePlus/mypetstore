@@ -10,6 +10,7 @@ import org.csu.mypetstore.persistence.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.util.List;
 
 @Service
@@ -56,5 +57,14 @@ public class CatalogService {
 
     public boolean isItemInStock(String itemId) {
         return itemMapper.getInventoryQuantity(itemId) > 0;
+    }
+
+    //自动补全
+    public List<String> getProductName(String name){
+        return productMapper.getProductName(name);
+    }
+
+    public List<String> getAllName(){
+        return productMapper.getAllName();
     }
 }
