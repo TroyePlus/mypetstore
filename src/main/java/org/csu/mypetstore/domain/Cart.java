@@ -1,5 +1,7 @@
 package org.csu.mypetstore.domain;
 
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -45,6 +47,10 @@ public class Cart {
             itemList.add(cartItem);
         }
         cartItem.incrementQuantity();
+    }
+
+    public CartItem getCartItemById(String itemId){
+        return (CartItem) itemMap.remove(itemId);
     }
 
     public Item removeItemById(String itemId) {

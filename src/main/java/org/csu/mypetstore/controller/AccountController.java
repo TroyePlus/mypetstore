@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,7 +69,7 @@ public class AccountController {
         return view;
     }
 
-    @GetMapping("signOff")
+    @GetMapping("signOut")
     public String signOff(Model model){
         model.addAttribute("account",new Account());
         model.addAttribute("myList", null);
@@ -135,13 +134,12 @@ public class AccountController {
     }
 
     @GetMapping("checkUsername")
-    public void checkUsername(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void checkUsername(String username, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
 
         PrintWriter out = response.getWriter();
         String str = "{\"isExit\":";
 
-        String username = request.getParameter("username");
         int result = accountService.getAccount(username) == null? 0:1;
         if(result == 1){
             str += "\"yes\"}";

@@ -89,7 +89,7 @@ public class OrderController {
         return view;
     }
 
-    @PostMapping("address")
+    @PostMapping("shippingAddress")
     public String updateAddress(Map<String,Object> params, Model model){
         Order order = (Order) model.getAttribute("order");
         if(order!=null) {
