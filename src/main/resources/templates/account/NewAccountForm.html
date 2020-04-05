@@ -11,7 +11,7 @@
 <div id="Content">
 
     <div id="Catalog">
-        <form action="register" name="register" method="post" th:object="${newAccount}">
+        <form action="/account/newAccount" name="register" method="post" th:object="${newAccount}">
 
             <h3>User Information</h3>
 
@@ -29,6 +29,10 @@
                     <td>Repeat password:</td>
                     <td><input type="text" name="repeatedPassword"></td>
                 </tr>
+                <tr th:if="${msg!=null}">
+                    <p th:text="${msg}"></p>
+                    <br>
+                </tr>
                 <tr>
                     <td><img src="/verifyCode" id="btn"><br></td>
                     <td><input type="text" name="image" placeholder="verification code"></td>
@@ -37,8 +41,8 @@
                     <!--                        <br>-->
                     <!--                    </c:if>-->
                 </tr>
-                <tr th:if="${imageMess}">
-                    <p th:value="${imageMess}"/>
+                <tr th:if="${imageMess!=null}">
+                    <p th:text="${imageMess}"></p>
                     <br>
                 </tr>
             </table>
@@ -62,7 +66,7 @@
             $("#username").on("blur", function () {
                 var name = $(this).val();
                 $.ajax({
-                    url: "checkUsername",
+                    url: "/account/checkUsername",
                     data: {
                         "username": name
                     },

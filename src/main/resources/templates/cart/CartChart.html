@@ -11,7 +11,7 @@
 <div id="Content">
 
     <div id="BackLink">
-        <a href="/main">Return to Main Menu</a>
+        <a href="/catalog/index">Return to Main Menu</a>
     </div>
 
     <%--
@@ -54,7 +54,7 @@
         $.ajax({
             type: "post",
             async: true, //异步请求（同步请求将会锁住浏览器，其他操作须等请求完成才可执行）
-            url: "/getChartInfo", //请求发送到GetChartInfoServlet
+            url: "/cart/viewChartInfo", //请求发送到GetChartInfoServlet
             data: {},
             dataType: "json", //返回数据形式为json
 

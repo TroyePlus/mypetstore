@@ -10,10 +10,10 @@
 
 <div id="Content">
     <div id="Catalog">
-        <form action="signOn" method="post">
+        <form action="/account/login" method="post">
 
-            <div th:if="${signMessage}">
-                <p th:value="${signMessage}"/>
+            <div th:if="${signMessage!=null}">
+                <p th:text="${signMessage}"></p>
             </div>
             <!--            <c:if test="${signMessage != null}">-->
             <!--                ${signMessage}-->
@@ -30,7 +30,7 @@
             <input type="text" name="image" placeholder="verification code">
             <img src="/verifyCode" id="btn"><br>
 
-            <p th:if="${msg!=null}" th:text="${msg}"></p>
+            <p th:if="${imageMess!=null}" th:text="${imageMess}"></p>
             <!--            <c:if test="${imageMess != null}">-->
             <!--                ${imageMess}-->
             <!--                <br>-->
@@ -42,10 +42,10 @@
 
         </form>
         Need a user name and password?
-        <a href="viewNewAccountForm">Register Now!</a>
+        <a href="/account/newAccountForm">Register Now!</a>
     </div>
 
-    <%--js改变验证码函数定义--%>
+    <!--js改变验证码函数定义-->
     <script type="text/javascript">
         document.getElementById("btn").onclick = function () {   // 获取img元素
             // 为了让浏览器发送请求到servlet, 所以一定要改变src

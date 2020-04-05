@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/account/")
-@SessionAttributes({"account","myList"})
+@SessionAttributes({"account","myList","text"})
 public class AccountController {
     @Autowired
     private AccountService accountService;
@@ -51,28 +53,39 @@ public class AccountController {
     }
 
     @PostMapping("login")
-    public String login(String username, String password, Model model){
+    public String login(String username, String password, String image,Model model){
+        //判断验证码
+        String text = (String) model.getAttribute("text");
+        System.out.println(text+"    "+image);
+
+        if (text==null || !text.equalsIgnoreCase(image)) {//equalsIgnoreCase意思是不考虑大小写
+
+            model.addAttribute("imageMess", "验证码输入错误!");
+
+            return "account/SignonForm";
+        }
+
         Account account = accountService.getAccount(username,password);
-        String view;
         if(account==null){
             String signMessage = "Invalid username or password. Signon failed.";
             model.addAttribute("signMessage",signMessage);
-            view = "account/SignonForm";
+           return  "account/SignonForm";
         }
         else {
             account.setPassword(null);
             List<Product> myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
             model.addAttribute("account",account);
             model.addAttribute("myList",myList);
-            view = "catalog/main";
+            return  "catalog/main";
         }
-        return view;
     }
 
     @GetMapping("signOut")
-    public String signOff(Model model){
-        model.addAttribute("account",new Account());
-        model.addAttribute("myList", null);
+    public String signOut(HttpSession session, SessionStatus status){
+//        session.removeAttribute("user");//取出http session中的user属性
+        session.invalidate();  //然后让http session失效
+        status.setComplete(); //最后是调用sessionStatus方法
+
         return "catalog/main";
     }
 
@@ -85,19 +98,25 @@ public class AccountController {
     }
 
     @PostMapping("newAccount")
-    public String register(Account account, Model model){
-        String view;
+    public String register(Account account, String image, Model model){
+        String text = (String) model.getAttribute("text");
+        System.out.println(text+"    "+image);
+
+        if (text==null || !text.equalsIgnoreCase(image)) {//equalsIgnoreCase意思是不考虑大小写
+            model.addAttribute("imageMess", "验证码输入错误!");
+            return "account/NewAccountForm";
+        }
+
         if(account.getUsername()==null||account.getUsername().trim().length()==0||
         account.getPassword()==null||account.getPassword().trim().length()==0){
             String msg = "用户名或密码不能为空";
             model.addAttribute("msg",msg);
-            view = "account/NewAccountForm";
+            return "account/NewAccountForm";
         }
         else {
             accountService.insertAccount(account);
-            view = "account/RegisterSuccessForm";
+            return "account/RegisterSuccessForm";
         }
-        return view;
     }
 
     @GetMapping("editAccountForm")

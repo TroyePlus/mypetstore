@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -55,8 +56,8 @@ public class OrderController {
     }
 
     @GetMapping("newOrder")
-    public String newOrderForm(Model model){
-        Account account = (Account)model.getAttribute("loginAccount");
+    public String newOrderForm(Model model, HttpSession session){
+        Account account = (Account)session.getAttribute("account");
         Cart cart = (Cart)model.getAttribute("cart");
         String view;
 

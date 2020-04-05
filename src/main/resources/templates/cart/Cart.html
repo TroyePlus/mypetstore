@@ -10,7 +10,7 @@
 
 <div id="Content">
     <div id="BackLink">
-        <a href="/main">Return to Main Menu</a>
+        <a href="/catalog/index">Return to Main Menu</a>
     </div>
 
     <div id="Catalog">
@@ -19,7 +19,7 @@
 
             <h2>Shopping Cart</h2>
 
-            <form action="updataCart" method="post">
+            <form action="/cart/updateCart" method="post">
                 <table id="quantity">
                     <tr>
                         <th><b>Item ID</b></th>
@@ -72,7 +72,7 @@
 
             </form>
 
-            <a class="Button" th:if="${cart.numberOfItems > 0}" href="#">
+            <a class="Button" th:if="${cart.numberOfItems > 0}" href="/order/newOrder">
                 Proceed to Checkout
             </a>
         </div>
@@ -106,7 +106,7 @@
 
                 $.ajax(
                     {
-                        url: "/updataCart?time=" + new Date().getTime(),
+                        url: "/cart/updateCart?time=" + new Date().getTime(),
                         data: {"number": number, "itemId": itemId},
                         type: "GET",
                         dataType: "json",

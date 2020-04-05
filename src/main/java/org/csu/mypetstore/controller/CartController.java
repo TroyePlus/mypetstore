@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/cart/")
-@SessionAttributes("cart")
+@SessionAttributes({"cart","account"})
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -47,9 +47,9 @@ public class CartController {
     }
 
     @GetMapping("addItemToCart")
-    public String addItemToCart(String workingItemId, Model model){
+    public String addItemToCart(String workingItemId, Model model,HttpSession session){
         Cart cart = (Cart) model.getAttribute("cart");
-        Account account = (Account) model.getAttribute("account");
+        Account account = (Account) session.getAttribute("account");
 
         if(account==null){
             String msg ="You must sign on before attempting to check out. Please sign on and try checking out again.";

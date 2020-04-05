@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
-@SessionAttributes("text")
 public class UtilController {
     @Autowired
     private CatalogService catalogService;

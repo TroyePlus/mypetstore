@@ -14,7 +14,7 @@
     </ul>
 
     <div id="BackLink">
-        <a href="main">Return to Main Menu</a>
+        <a href="/catalog/index">Return to Main Menu</a>
     </div>
 
     <div id="Catalog">
@@ -155,7 +155,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <a th:href="@{/order/viewItem?itemId=}+${lineItem.item.itemId}"
+                                <a th:href="@{/catalog/viewItem?itemId=}+${lineItem.item.itemId}"
                                    th:text="${lineItem.item.itemId}">itemId</a>
                             </td>
                             <td th:if="${lineItem.item != null}">

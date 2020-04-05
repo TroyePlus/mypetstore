@@ -11,7 +11,7 @@
 <div id="Content">
 
     <div id="Catalog">
-        <form action="editAccount" method="post" th:object="${account}">
+        <form action="/account/editAccount" method="post" th:object="${account}">
 
             <h3>User Information</h3>
 
@@ -36,7 +36,7 @@
 
         </form>
 
-        <a href="#">My Orders</a>
+        <a href="/order/viewListOrder">My Orders</a>
     </div>
 </div>
 

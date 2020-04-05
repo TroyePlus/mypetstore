@@ -23,7 +23,10 @@ public class CatalogController {
         return "catalog/main";
     }
 
-    @GetMapping("viewCategory")
+//    viewCatalog
+//    viewCategory
+
+    @GetMapping("viewCatalog")
     public String viewCategory(String categoryId, Model model){
         if (categoryId!=null){
             Category category = catalogService.getCategory(categoryId);
