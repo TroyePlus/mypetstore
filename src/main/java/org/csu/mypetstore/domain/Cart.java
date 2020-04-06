@@ -41,7 +41,7 @@ public class Cart {
         if (cartItem == null) {
             cartItem = new CartItem();
             cartItem.setItem(item);
-            cartItem.setQuantity(0);
+            cartItem.setQuantity(item.getQuantity());
             cartItem.setInStock(isInStock);
             itemMap.put(item.getItemId(), cartItem);
             itemList.add(cartItem);

@@ -67,13 +67,14 @@ public class CartController {
             {
                 cart.incrementQuantityByItemId(workingItemId);
                 CartItem cartItem = cart.getCartItemById(workingItemId);
-                cartService.updataQuantity(account.getUsername(),workingItemId,cartItem.getQuantity()+1);
+                cartService.updataQuantity(account.getUsername(),workingItemId,cartItem.getQuantity());
             }
             else{
                 boolean isInStock = catalogService.isItemInStock(workingItemId);
                 Item item = catalogService.getItem(workingItemId);
                 cart.addItem(item,isInStock);
-                cartService.insertItem(account.getUsername(),workingItemId,0,isInStock);
+                cart.setQuantityByItemId(workingItemId,1);
+                cartService.insertItem(account.getUsername(),workingItemId,1,isInStock);
             }
             model.addAttribute("cart",cart);
             return "cart/Cart";
@@ -81,10 +82,16 @@ public class CartController {
     }
 
     @GetMapping("removeItemFromCart")
-    public String removeItemFromCart(String workingItemId, Model model){
+    public String removeItemFromCart(String workingItemId, Model model,HttpSession session){
         Cart cart = (Cart) model.getAttribute("cart");
 
         Item item = cart.removeItemById(workingItemId);
+
+        Account account = (Account)session.getAttribute("account");
+        String userId = account.getUsername();
+        String itemId = item.getItemId();
+        cartService.removeItem(userId,itemId);
+
         model.addAttribute("cart",cart);
         if(item == null){
             model.addAttribute("msg", "Attempted to remove null CartItem from Cart.");
