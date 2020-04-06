@@ -83,7 +83,7 @@
                 </p>
                 <ul>
                     <li th:each="product:${session.myList}">
-                        <a th:href="'/catalog/viewProduct?productId='+${product.productId}"
+                        <a th:href="@{'/catalog/viewProduct?productId='+${product.productId}}"
                            th:text="${product.productId}"></a>
                     </li>
                 </ul>

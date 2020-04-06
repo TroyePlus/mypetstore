@@ -38,10 +38,10 @@
                         <!--                        <c:forEach var="cartItem" items="${sessionScope.cart.cartItems}">-->
                         <tr th:each="cartItem:${cart.cartItems}">
                             <td>
-                                <a th:href="'/catalog/viewItem?itemId='+${cartItem.item.itemId}"
-                                   th:value="${cartItem.item.itemId}"></a>
+                                <a th:href="@{'/catalog/viewItem?itemId='+${cartItem.item.itemId}}"
+                                   th:text="${cartItem.item.itemId}"></a>
                             </td>
-                            <td th:value="${cart.productId}"></td>
+                            <td th:text="${cart.productId}"></td>
                             <td th:text="${cartItem.item.attribute1}+${cartItem.item.product.name}"></td>
                             <td th:text="${cartItems.inStock}"></td>
                             <td th:text="${cartItems.quantity}"></td>
@@ -70,7 +70,7 @@
 
                         <tr>
                             <td colspan="7">
-                                <label th:text="'Sub Total:$'+${#numbers.formatDecimal(cart.subTotal,1,2)}/>
+                                <label th:text="'Sub Total:$'+${#numbers.formatDecimal(cart.subTotal,1,2)}"></label>
                             </td>
 <!--                                                        <td colspan=" 7">Sub Total:-->
                                 <!--                                                            <fmt:formatNumber-->

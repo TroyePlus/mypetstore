@@ -30,14 +30,14 @@
             </tr>
 
             <tr th:each="item:${itemList}">
-                <td><a th:href="'/catalog/viewItem?itemId='+${item.itemId}" th:text="${item.itemId}" >Item ID</a></td>
+                <td><a th:href="@{'/catalog/viewItem?itemId='+${item.itemId}}" th:text="${item.itemId}" >Item ID</a></td>
                 <td th:text="${item.product.productId}">Product ID</td>
                 <td th:text="${item.attribute1}">
                     Item Attributes
                 </td>
                 <!--                    <td th:text="${item.listPrice}">Item List Price</td>-->
                 <td th:text="'$'+${#numbers.formatDecimal(item.listPrice,1,2)}">Item List Price</td>
-                <td><a th:href="'/cart/addItemToCart?workingItemId='+${item.itemId}">Add to Cart</a></td>
+                <td><a th:href="@{'/cart/addItemToCart?workingItemId='+${item.itemId}}">Add to Cart</a></td>
             </tr>
         </table>
     </div>
