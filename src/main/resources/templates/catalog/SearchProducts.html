@@ -28,7 +28,7 @@
                 </td>
                 <td>
                     <b>
-                        <a th:href="'/catalog/viewProduct?productId='+${product.productId}">
+                        <a th:href="@{'/catalog/viewProduct?productId='+${product.productId}}">
                             <font color="BLACK" th:text="${product.productId}">Product ID</font>
                         </a>
                     </b>
