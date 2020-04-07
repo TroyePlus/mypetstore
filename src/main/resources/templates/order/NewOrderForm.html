@@ -11,7 +11,7 @@
 
 <div id="Content">
     <div id="Catalog">
-        <form action="/order/confirmOrder" method="post" th:object="${order}">
+            <form action="/order/confirmOrder" method="post" th:object="${session.account}">
             <table >
                 <tr>
                     <th colspan=2>Payment Details</th>
@@ -19,7 +19,7 @@
                 <tr>
                     <td>Card Type:</td>
                     <td>
-                        <select>
+                        <select name="cardType">
                             <option value="Visa" selected="selected">Visa</option>
                             <option value="MasterCard">MasterCard</option>
                             <option value="American Express">American Express</option>
@@ -45,50 +45,51 @@
                 <tr>
                     <td>First name:</td>
                     <td>
-                        <input type="text" th:value="*{billToFirstName}" name="billToFirstName"/>
+                        <!--/*@thymesVar id="firstName" type=""*/-->
+                        <input type="text" th:value="*{firstName}" name="billToFirstName"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Last name:</td>
                     <td>
-                        <input type="text" name="billToLastName" th:value="*{billToLastName}"/>
+                        <input type="text" name="billToLastName" th:value="*{lastName}"/>
                         <!--                        <input type="text" name="billToLastName" value="${sessionScope.order.billToLastName}"/>-->
                     </td>
                 </tr>
                 <tr>
                     <td>Address 1:</td>
                     <td>
-                        <input type="text" size="40" name="billAddress1" th:value="*{billAddress1}"/>
+                        <input type="text" size="40" name="billAddress1" th:value="*{address1}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Address 2:</td>
                     <td>
-                        <input type="text" size="40" name="billAddress2" th:value="*{billAddress2}"/>
+                        <input type="text" size="40" name="billAddress2" th:value="*{address2}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>City:</td>
                     <td>
-                        <input type="text" name="billCity" th:value="*{billCity}"/>
+                        <input type="text" name="billCity" th:value="*{city}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>State:</td>
                     <td>
-                        <input type="text" size="4" name="billState" th:value="*{billState}"/>
+                        <input type="text" size="4" name="billState" th:value="*{state}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Zip:</td>
                     <td>
-                        <input type="text" size="10" name="billZip" th:value="*{billZip}"/>
+                        <input type="text" size="10" name="billZip" th:value="*{zip}"/>
                     </td>
                 </tr>
                 <tr>
                     <td>Country:</td>
                     <td>
-                        <input type="text" size="15" name="billCountry" th:value="*{billCountry}"/>
+                        <input type="text" size="15" name="billCountry" th:value="*{country}"/>
                     </td>
                 </tr>
 

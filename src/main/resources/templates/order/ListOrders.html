@@ -21,7 +21,7 @@
 
         <tr th:each="order:${orderList}">
             <td>
-                <a th:href="@{/order/viewOrder?orderId=}+${order.orderId}" th:text="${order.orderId}">orderId</a>
+                <a th:href="@{/order/viewOrder?orderId=}+${order.orderId}" th:text="*{order.orderId}">orderId</a>
             </td>
             <td>
                 <span th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm:ss')}">date</span>

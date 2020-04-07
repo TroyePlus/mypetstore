@@ -2,15 +2,14 @@ package org.csu.mypetstore.controller;
 
 import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Cart;
+import org.csu.mypetstore.domain.LineItem;
 import org.csu.mypetstore.domain.Order;
+import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -25,8 +24,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CatalogService catalogService;
+
     @GetMapping("viewOrder")
-    public String viewOrder(Model model){
+    public String viewOrder(Model model,HttpSession session){
         Order order = (Order) model.getAttribute("order");
         String view, msg;
 
@@ -35,6 +37,19 @@ public class OrderController {
             model.addAttribute("cart",null);
 
             msg = "Thank you, your order has been submitted.";
+            //更改库存
+            Account account = (Account) session.getAttribute("account");
+            List<LineItem> lineItems = order.getLineItems();
+            for (LineItem l:lineItems) {
+                int stockQuantity = catalogService.getStockQuantity(l.getItemId());
+                if(stockQuantity >= l.getQuantity()){
+                    catalogService.updateStockQuantity(l.getItemId(),l.getQuantity());
+                }
+                else{
+
+                }
+            }
+
            view = "order/ViewOrder";
         } else {
             msg = "An error occurred processing your order (order was null).";
@@ -45,8 +60,8 @@ public class OrderController {
     }
 
     @GetMapping("viewListOrder")
-    public String viewListOrder(Model model){
-        Account account = (Account) model.getAttribute("loginAccount");
+    public String viewListOrder(Model model,HttpSession session){
+        Account account = (Account) session.getAttribute("account");
         if(account!=null) {
             List<Order> orderList = orderService.getOrdersByUsername(account.getUsername());
             model.addAttribute("orderList",orderList);
@@ -66,8 +81,19 @@ public class OrderController {
            view = "account/SignonForm";
         } else if(cart != null){
             Order order = new Order();
-            //order.initOrder(account, cart);
+            order.initOrder(account, cart);
             model.addAttribute("order", order);
+            //库存判断
+            List<LineItem> lineItems = order.getLineItems();
+            for (LineItem l:lineItems
+                 ) {
+                int stockQuantity = catalogService.getStockQuantity(l.getItemId());
+                if(stockQuantity < l.getQuantity()){
+                    view = "cart/Cart";
+                    return view;
+                }
+            }
+
             view = "order/NewOrderForm";
         }else{
             model.addAttribute("message", "An order could not be created because a cart could not be found.");
@@ -77,9 +103,13 @@ public class OrderController {
     }
 
     @PostMapping("confirmOrder")
-    public String confirmOrder(HttpServletRequest request, Model model){
+    public String confirmOrder(@RequestParam Map<String,Object> params, HttpServletRequest request, Model model){
         String shippingAddressRequired = request.getParameter("shippingAddressRequired");
         String view;
+        Order order = (Order)model.getAttribute("order");
+        order.setCardType((String)params.get("cardType"));
+        order.setCreditCard((String)params.get("creditCard"));
+        order.setExpiryDate((String)params.get("expiryDate"));
 
         if (shippingAddressRequired == null){
             view = "order/ConfirmOrder";
@@ -91,7 +121,7 @@ public class OrderController {
     }
 
     @PostMapping("shippingAddress")
-    public String updateAddress(Map<String,Object> params, Model model){
+    public String updateAddress(@RequestParam Map<String,Object> params, Model model){
         Order order = (Order) model.getAttribute("order");
         if(order!=null) {
             order.setShipToFirstName((String) params.get("shipToFirstName"));

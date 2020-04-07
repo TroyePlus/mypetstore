@@ -6,6 +6,7 @@
     <select id="getAccountByUsername" parameterType="String" resultType="Account">
         SELECT
           SIGNON.USERNAME,
+          SIGNON.PASSWORD,
           ACCOUNT.EMAIL,
           ACCOUNT.FIRSTNAME,
           ACCOUNT.LASTNAME,

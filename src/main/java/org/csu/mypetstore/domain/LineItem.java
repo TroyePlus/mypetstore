@@ -79,4 +79,17 @@ public class LineItem {
                 ", total=" + total +
                 '}';
     }
+
+    public LineItem() {
+    }
+
+    public LineItem(int orderId, int lineNumber, int quantity, String itemId, BigDecimal unitPrice, Item item, BigDecimal total) {
+        this.orderId = orderId;
+        this.lineNumber = lineNumber;
+        this.quantity = quantity;
+        this.itemId = itemId;
+        this.unitPrice = unitPrice;
+        this.item = item;
+        this.total = total;
+    }
 }

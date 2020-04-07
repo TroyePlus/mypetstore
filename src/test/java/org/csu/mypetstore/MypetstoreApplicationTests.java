@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Max;
@@ -25,6 +26,9 @@ class MypetstoreApplicationTests {
 
     @Autowired
     CatalogService catalogService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void testCart(){
@@ -56,6 +60,19 @@ class MypetstoreApplicationTests {
         }
 
     }
+
+    @Test
+    public void testSecurity(){
+        System.out.println(passwordEncoder.encode("j2ee"));
+    }
+
+    @Test
+    public void testItem(){
+//        System.out.println(catalogService.getStockQuantity("EST-1"));
+
+        catalogService.updateStockQuantity("EST-1",2);
+    }
+
 
 
 }

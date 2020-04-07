@@ -5,6 +5,7 @@ import org.csu.mypetstore.domain.Product;
 import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,9 @@ import java.util.List;
 public class AccountController {
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private CatalogService catalogService;
@@ -53,7 +57,7 @@ public class AccountController {
     }
 
     @PostMapping("login")
-    public String login(String username, String password, String image,Model model){
+    public String login(String username, String password, String image,Model model,HttpSession session){
         //判断验证码
         String text = (String) model.getAttribute("text");
         System.out.println(text+"    "+image);
@@ -65,18 +69,24 @@ public class AccountController {
             return "account/SignonForm";
         }
 
-        Account account = accountService.getAccount(username,password);
+        Account account = accountService.getAccount(username);
         if(account==null){
             String signMessage = "Invalid username or password. Signon failed.";
             model.addAttribute("signMessage",signMessage);
            return  "account/SignonForm";
         }
-        else {
+        else if(passwordEncoder.matches(password,account.getPassword())) {
             account.setPassword(null);
             List<Product> myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
             model.addAttribute("account",account);
+            session.setAttribute("account",account);
             model.addAttribute("myList",myList);
             return  "catalog/main";
+        }
+        else{
+            String signMessage = "Invalid username or password. Signon failed.";
+            model.addAttribute("signMessage",signMessage);
+            return  "account/SignonForm";
         }
     }
 

@@ -1,6 +1,8 @@
 package org.csu.mypetstore.domain;
 
 import java.math.BigDecimal;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -34,6 +36,37 @@ public class Order {
     private String locale;
     private String status;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
+
+    public void initOrder(Account account,Cart cart){
+        this.username = account.getUsername();
+        SimpleDateFormat Today = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+       String dateString = Today.format(new Date());
+       this.orderDate = Today.parse(dateString,new ParsePosition(0));
+       this.billToFirstName = account.getFirstName();
+       this.billToLastName = account.getLastName();
+       this.billAddress1 = account.getAddress1();
+        this.billAddress2 = account.getAddress2();
+        this.billCity = account.getCity();
+        this.billState = account.getState();
+        this.billZip = account.getZip();
+        this.billCountry = account.getCountry();
+
+        //添加lineItems
+        List<CartItem> cartItemList = cart.getCartItemList();
+        for (CartItem c:cartItemList
+             ) {
+            LineItem lineItem = new LineItem();
+            lineItem.setOrderId(this.orderId);
+            lineItem.setItemId(c.getItem().getItemId());
+            lineItem.setQuantity(c.getQuantity());
+            lineItem.setItem(c.getItem());
+            lineItem.setTotal(c.getTotal());
+            lineItem.setUnitPrice(c.getItem().getUnitCost());
+
+            this.lineItems.add(lineItem);
+        }
+
+    }
 
     public int getOrderId() {
         return orderId;

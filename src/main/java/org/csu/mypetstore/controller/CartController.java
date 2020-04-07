@@ -101,7 +101,7 @@ public class CartController {
         }
     }
 
-    @GetMapping("updateCart")
+    @PostMapping("updateCart")
     public void updateCart(String itemId, @RequestParam("number")int quantity, HttpServletRequest request, HttpServletResponse response){
         HttpSession session  = request.getSession();
         Cart cart = (Cart)session.getAttribute("cart");

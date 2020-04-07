@@ -59,4 +59,12 @@
       and I.ITEMID = #{value}
   </select>
 
+    <select id="getStockQuantity" parameterType="String" resultType="int">
+        select stockquantity from item where itemid = #{itemId}
+    </select>
+
+    <update id="updateStockQuantity" >
+        update item set stockquantity = stockquantity - #{decreaseQuantity} where itemid = #{itemId}
+    </update>
+
 </mapper>

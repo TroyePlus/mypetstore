@@ -50,7 +50,7 @@
                         <td th:text="${cartItem.item.attribute1}+${cartItem.item.product.name}"></td>
                         <td th:text="${cartItem.inStock}"></td>
                         <td>
-                            <input type="text" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}">
+                            <input type="text" name="number" th:name="${cartItem.item.itemId}" th:value="${cartItem.quantity}">
                         </td>
                         <td th:text="'$'+${#numbers.formatDecimal(cartItem.item.listPrice,1,2)}"></td>
                         <td th:text="'$'+${#numbers.formatDecimal(cartItem.total,1,2)}"></td>

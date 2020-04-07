@@ -16,7 +16,17 @@ public class Item {
     private String attribute5;
     private Product product;
     private int quantity;
+    //库存数量
+    private int stockQuantity;
     private boolean inStock;
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
 
     public boolean isInStock() {
         return inStock;

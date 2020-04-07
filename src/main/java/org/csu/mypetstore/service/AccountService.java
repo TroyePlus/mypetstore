@@ -4,6 +4,7 @@ import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.persistence.AccountMapper;
 import org.csu.mypetstore.persistence.LineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
     @Autowired
     private AccountMapper accountMapper;
+
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
 
     public Account getAccount(String username) {
         return accountMapper.getAccountByUsername(username);
@@ -25,6 +31,8 @@ public class AccountService {
 
     @Transactional
     public void insertAccount(Account account) {
+        String password = passwordEncoder.encode(account.getPassword());
+        account.setPassword(password);
         accountMapper.insertAccount(account);
         accountMapper.insertProfile(account);
         accountMapper.insertSignon(account);

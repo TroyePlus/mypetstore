@@ -18,16 +18,15 @@
             <table>
                 <tr>
                     <td>User ID:</td>
-                    <td><input type="text" th:field="*{username}"></td>
-                    <span id="isExit"></span>
+                    <td><input type="text" name="username" id="username"> </td>
                 </tr>
                 <tr>
                     <td>New password:</td>
-                    <td><input type="password" th:field="*{password}" /></td>
+                    <td><input type="text" name="password"> </td>
                 </tr>
                 <tr>
                     <td>Repeat password:</td>
-                    <td><input type="text" name="repeatedPassword"></td>
+                    <td><input type="text" name="repeatedPassword"> </td>
                 </tr>
                 <tr th:if="${msg!=null}">
                     <p th:text="${msg}"></p>
@@ -54,7 +53,7 @@
         </form>
     </div>
 
-    <%--js改变验证码函数定义--%>
+<!--    <%&#45;&#45;js改变验证码函数定义&#45;&#45;%>-->
     <script type="text/javascript">
         document.getElementById("btn").onclick = function () {   // 获取img元素
             // 为了让浏览器发送请求到servlet, 所以一定要改变src
