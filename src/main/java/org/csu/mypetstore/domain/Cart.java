@@ -50,7 +50,7 @@ public class Cart {
     }
 
     public CartItem getCartItemById(String itemId){
-        return (CartItem) itemMap.remove(itemId);
+        return itemMap.get(itemId);
     }
 
     public Item removeItemById(String itemId) {

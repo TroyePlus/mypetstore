@@ -6,7 +6,7 @@ import org.csu.mypetstore.service.CatalogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +33,7 @@ public class UtilController {
 
     //自动补全
     @GetMapping("/findResult")
-    public void findResult(String keyword, HttpServletResponse response) throws IOException {
+    public void findResult(@RequestParam("keyword")String keyword, HttpServletResponse response) throws IOException {
         //向server层调用相应的业务
         List<Product> productList = catalogService.searchProductList(keyword);
 
@@ -53,5 +53,10 @@ public class UtilController {
 
         out.flush();
         out.close();
+    }
+
+    @GetMapping("/help")
+    public String help(){
+        return "common/help";
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.tags.HtmlEscapingAwareTag;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,11 +16,13 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/cart/")
-@SessionAttributes({"cart","account"})
+@SessionAttributes({"cart"})
 public class CartController {
     @Autowired
     private CartService cartService;
@@ -29,9 +30,9 @@ public class CartController {
     private CatalogService catalogService;
 
     @GetMapping("viewCart")
-    public String viewCart(Model model){
-        Cart cart = (Cart) model.getAttribute("cart");
-        Account account = (Account) model.getAttribute("account");
+    public String viewCart(Model model,HttpSession session){
+        Cart cart = (Cart)model.getAttribute("cart");
+        Account account = (Account) session.getAttribute("account");
         if(cart==null){
             if(account!=null){
                 cart = new Cart();
@@ -101,34 +102,41 @@ public class CartController {
         }
     }
 
-    @PostMapping("updateCart")
-    public void updateCart(String itemId, @RequestParam("number")int quantity, HttpServletRequest request, HttpServletResponse response){
+    @GetMapping(value="updateCart",produces="application/json;charset=utf-8")
+    @ResponseBody  //返回给前端json数据
+    public Map<String,Object> updateCart(@RequestParam("itemId")String itemId, @RequestParam("number")String quantity, HttpServletRequest request){
         HttpSession session  = request.getSession();
         Cart cart = (Cart)session.getAttribute("cart");
         Account account = (Account)session.getAttribute("account");
         CartItem cartItem = cart.getCartItemById(itemId);
 
-        cartService.updataQuantity(account.getUsername(),itemId,quantity);
-        cartItem.setQuantity(quantity);
+        int q = Integer.parseInt(quantity);
+        cartService.updataQuantity(account.getUsername(),itemId,q);
+        cartItem.setQuantity(q);
 
         request.getSession().setAttribute("cart",cart);
 
-        String str="{\"total\":"+cartItem.getTotal()+",";
-        str += "\"subTotal\":"+cart.getSubTotal()+"}";
+        Map<String,Object> map = new HashMap<>();
 
-        response.setContentType("text/json;charset=UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        map.put("total",cartItem.getTotal());
+        map.put("subTotal",cart.getSubTotal());
+        return map;
+//        String str="{\"total\":"+cartItem.getTotal()+",";
+//        str += "\"subTotal\":"+cart.getSubTotal()+"}";
 
-        try{
-            PrintWriter out = response.getWriter();
-
-            out.write(str);
-            out.flush();
-            out.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+//        response.setContentType("text/json;charset=UTF-8");
+//        response.setCharacterEncoding("UTF-8");
+//
+//        try{
+//            PrintWriter out = response.getWriter();
+//
+//            out.write(str);
+//            out.flush();
+//            out.close();
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @GetMapping("viewCartChart")

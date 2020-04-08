@@ -27,7 +27,7 @@ public class CatalogController {
 //    viewCatalog
 //    viewCategory
 
-    @GetMapping("viewCatalog")
+    @GetMapping("viewCategory")
     public String viewCategory(String categoryId, Model model){
         if (categoryId!=null){
             Category category = catalogService.getCategory(categoryId);
