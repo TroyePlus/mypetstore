@@ -29,6 +29,10 @@ public class AccountService {
         return accountMapper.getAccountByUsernameAndPassword(account);
     }
 
+    public String getUsername(String phone){
+        return accountMapper.getUserNameByPhone(phone);
+    }
+
     @Transactional
     public void insertAccount(Account account) {
         String password = passwordEncoder.encode(account.getPassword());

@@ -1,5 +1,7 @@
 package org.csu.mypetstore.domain;
 
+import org.springframework.util.StringUtils;
+
 public class Account {
     private String username;
     private String password;
@@ -163,6 +165,12 @@ public class Account {
 
     public void setBannerName(String bannerName) {
         this.bannerName = bannerName;
+    }
+
+    public void resetPhone(){
+        if(phone!=null){
+            phone = phone.substring(0,3)+"****"+phone.substring(7);
+        }
     }
 
     @Override

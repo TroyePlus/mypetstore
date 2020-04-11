@@ -57,6 +57,12 @@
       AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
   </select>
 
+  <select id="getUserNameByPhone" parameterType="string" resultType="string">
+    select userid
+    from account
+    where phone = #{phone}
+  </select>
+
     <insert id="insertAccount" parameterType="Account">
     INSERT INTO ACCOUNT
       (EMAIL, FIRSTNAME, LASTNAME, STATUS, ADDR1, ADDR2, CITY, STATE, ZIP, COUNTRY, PHONE, USERID)

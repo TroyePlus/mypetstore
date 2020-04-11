@@ -10,6 +10,8 @@ public interface AccountMapper {
 
     Account getAccountByUsernameAndPassword(Account account);
 
+    String getUserNameByPhone(String phone);
+
     void insertAccount(Account account);
 
     void insertProfile(Account account);

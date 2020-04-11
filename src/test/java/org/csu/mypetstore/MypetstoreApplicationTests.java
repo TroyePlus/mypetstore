@@ -3,6 +3,7 @@ package org.csu.mypetstore;
 import org.csu.mypetstore.domain.Cart;
 import org.csu.mypetstore.domain.CartItem;
 import org.csu.mypetstore.domain.Item;
+import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CartService;
 import org.csu.mypetstore.service.CatalogService;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class MypetstoreApplicationTests {
 
     @Autowired
     CatalogService catalogService;
+
+    @Autowired
+    AccountService accountService;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -73,6 +77,9 @@ class MypetstoreApplicationTests {
         catalogService.updateStockQuantity("EST-1",2);
     }
 
-
-
+    @Test
+    public void testPhone(){
+        String phone = "18374999116";
+        System.out.println(accountService.getUsername("18374999116"));
+    }
 }

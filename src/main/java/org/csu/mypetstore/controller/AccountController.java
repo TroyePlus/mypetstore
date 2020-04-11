@@ -1,6 +1,7 @@
 package org.csu.mypetstore.controller;
 
 import org.csu.mypetstore.domain.Account;
+import org.csu.mypetstore.domain.MsgCode;
 import org.csu.mypetstore.domain.Product;
 import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CatalogService;
@@ -11,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -78,6 +78,7 @@ public class AccountController {
         else if(passwordEncoder.matches(password,account.getPassword())) {
             account.setPassword(null);
             List<Product> myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
+            account.resetPhone();
             model.addAttribute("account",account);
             session.setAttribute("account",account);
             model.addAttribute("myList",myList);
@@ -88,6 +89,53 @@ public class AccountController {
             model.addAttribute("signMessage",signMessage);
             return  "account/SignonForm";
         }
+    }
+
+    @PostMapping("loginByPhone")
+    public String login(String phone, String code, Model model, HttpSession session) {
+        MsgCode msgCode = (MsgCode) session.getAttribute(phone);
+
+        if (code == null || code.length() == 0) {
+            String msg = "短信验证码不能为空";
+            model.addAttribute("msg",msg);
+            return "account/SignonForm";
+        }
+
+        if (msgCode == null || msgCode.getType() != 0 ||
+                (System.currentTimeMillis() / 1000 - msgCode.getCreateTime() >= 300)) {
+            String msg = "短信验证码已过期,请重新获取";
+            model.addAttribute("msg",msg);
+            return "account/SignonForm";
+        }
+
+        if (!code.equals(msgCode.getCode())){
+            String msg = "验证码错误,请重新输入";
+            model.addAttribute("msg",msg);
+            return "account/SignonForm";
+        }
+
+        String username = accountService.getUsername(phone);
+        Account account;
+        List<Product> myList;
+
+        if(username!=null){
+            account = accountService.getAccount(username);
+            account.setPassword(null);
+            myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
+        }
+        else {
+            account = new Account();
+//            account.setUsername(username);
+            accountService.insertAccount(account);
+            myList = null;
+        }
+        account.resetPhone();
+        model.addAttribute("account",account);
+        session.setAttribute("account",account);
+        session.removeAttribute(phone);
+        model.addAttribute("myList",myList);
+
+        return  "catalog/main";
     }
 
     @GetMapping("signOut")
@@ -162,11 +210,12 @@ public class AccountController {
         return view;
     }
 
-    @GetMapping("checkUsername")
-    public void checkUsername(String username, HttpServletResponse response) throws IOException {
-        response.setCharacterEncoding("UTF-8");
-
-        PrintWriter out = response.getWriter();
+    @PostMapping(value="checkUsername",produces="application/json;charset=utf-8")
+    @ResponseBody
+    public String checkUsername(String username) throws IOException {
+//        response.setCharacterEncoding("UTF-8");
+//
+//        PrintWriter out = response.getWriter();
         String str = "{\"isExit\":";
 
         int result = accountService.getAccount(username) == null? 0:1;
@@ -176,8 +225,9 @@ public class AccountController {
         else{
             str += "\"no\"}";
         }
-        out.println(str);
-        out.flush();
-        out.close();
+        return str;
+//        out.println(str);
+//        out.flush();
+//        out.close();
     }
 }
