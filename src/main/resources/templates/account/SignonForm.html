@@ -15,9 +15,6 @@
             <div th:if="${signMessage!=null}">
                 <p th:text="${signMessage}"></p>
             </div>
-            <!--            <c:if test="${signMessage != null}">-->
-            <!--                ${signMessage}-->
-            <!--            </c:if>-->
 
             <p>
                 Please enter your username and password.
@@ -31,10 +28,6 @@
             <img src="/verifyCode" id="btn"><br>
 
             <p th:if="${imageMess!=null}" th:text="${imageMess}"></p>
-            <!--            <c:if test="${imageMess != null}">-->
-            <!--                ${imageMess}-->
-            <!--                <br>-->
-            <!--            </c:if>-->
 
 
             <input type="submit" name="signon" value="Login">
