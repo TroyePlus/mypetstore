@@ -2,6 +2,8 @@ package org.csu.mypetstore.domain;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Random;
+
 public class Account {
     private String username;
     private String password;
@@ -167,12 +169,6 @@ public class Account {
         this.bannerName = bannerName;
     }
 
-    public void resetPhone(){
-        if(phone!=null){
-            phone = phone.substring(0,3)+"****"+phone.substring(7);
-        }
-    }
-
     @Override
     public String toString() {
         return "Account{" +
@@ -195,5 +191,29 @@ public class Account {
                 ", bannerOption=" + bannerOption +
                 ", bannerName='" + bannerName + '\'' +
                 '}';
+    }
+
+    public void init(){
+        this.username = randomName();
+        System.out.println(this.username);
+        this.email = "";
+        this.firstName = "";
+        this.lastName = "";
+        this.address1 = "";
+        this.city = "";
+        this.state = "";
+        this.zip = "";
+        this.country = "";
+        this.languagePreference = "CHINESE";
+        this.favouriteCategoryId = "DOGS";
+    }
+
+    public static String resetPhone(String phone) {
+        return phone==null? null : phone.substring(0, 3) + "****" + phone.substring(7);
+    }
+    public static String randomName(){
+        long temp = System.currentTimeMillis();
+        return "petstore_" + ((new Random(temp)).nextInt(900) + 100)
+                + String.valueOf(temp).substring(5,13);
     }
 }

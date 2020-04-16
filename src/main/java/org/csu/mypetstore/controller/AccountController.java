@@ -15,9 +15,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/account/")
@@ -56,6 +54,11 @@ public class AccountController {
         return "account/SignonForm";
     }
 
+    @GetMapping("loginByPhoneForm")
+    public String loginByPhoneForm(){
+        return "account/SignonPhoneForm";
+    }
+
     @PostMapping("login")
     public String login(String username, String password, String image,Model model,HttpSession session){
         //判断验证码
@@ -78,7 +81,7 @@ public class AccountController {
         else if(passwordEncoder.matches(password,account.getPassword())) {
             account.setPassword(null);
             List<Product> myList = catalogService.getProductListByCategory(account.getFavouriteCategoryId());
-            account.resetPhone();
+            account.setPhone(Account.resetPhone(account.getPhone()));
             model.addAttribute("account",account);
             session.setAttribute("account",account);
             model.addAttribute("myList",myList);
@@ -92,26 +95,25 @@ public class AccountController {
     }
 
     @PostMapping("loginByPhone")
-    public String login(String phone, String code, Model model, HttpSession session) {
-        MsgCode msgCode = (MsgCode) session.getAttribute(phone);
-
-        if (code == null || code.length() == 0) {
-            String msg = "短信验证码不能为空";
-            model.addAttribute("msg",msg);
-            return "account/SignonForm";
-        }
+    @ResponseBody
+    public Map<String,Object> login(String phone, String code, Model model, HttpSession session) {
+        MsgCode msgCode = (MsgCode) session.getAttribute(phone); //取出短信验证码对象
+//        MsgCode msgCode = new MsgCode(0);
+//        msgCode.setCode("123456");
+        Map<String,Object> map = new HashMap<>();
 
         if (msgCode == null || msgCode.getType() != 0 ||
                 (System.currentTimeMillis() / 1000 - msgCode.getCreateTime() >= 300)) {
-            String msg = "短信验证码已过期,请重新获取";
-            model.addAttribute("msg",msg);
-            return "account/SignonForm";
+            map.put("msg","短信验证码已过期,请重新获取");
+            map.put("status",0);
+            return map;
         }
 
+        System.out.println(msgCode.getCode());
         if (!code.equals(msgCode.getCode())){
-            String msg = "验证码错误,请重新输入";
-            model.addAttribute("msg",msg);
-            return "account/SignonForm";
+            map.put("msg","验证码错误,请重新输入");
+            map.put("status",0);
+            return map;
         }
 
         String username = accountService.getUsername(phone);
@@ -125,17 +127,21 @@ public class AccountController {
         }
         else {
             account = new Account();
-//            account.setUsername(username);
+            account.init();
+            account.setPhone(phone);
+            account.setPassword(phone.substring(7));
             accountService.insertAccount(account);
             myList = null;
         }
-        account.resetPhone();
+        account.setPhone(Account.resetPhone(account.getPhone()));
         model.addAttribute("account",account);
         session.setAttribute("account",account);
         session.removeAttribute(phone);
         model.addAttribute("myList",myList);
 
-        return  "catalog/main";
+        map.put("msg","登陆成功");
+        map.put("status",1);
+        return map;
     }
 
     @GetMapping("signOut")

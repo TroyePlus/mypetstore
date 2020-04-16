@@ -7,7 +7,6 @@ import org.csu.mypetstore.service.AccountService;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.sms.SmsSingleSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,16 +19,15 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
 public class UtilController {
     @Autowired
     private CatalogService catalogService;
-
-    @Autowired
-    private AccountService accountService;
 
     //验证码
     @GetMapping("/verifyCode")
@@ -73,34 +71,47 @@ public class UtilController {
 
     @PostMapping("/msgCode")
     @ResponseBody
-    public String msgCode(String phone, HttpSession session) {
-        String preStr = "{\"resultMsg\":\"";
-        String sufStr = "\"}";
+    public Map<String,Object> msgCode(String phone, HttpSession session) {
+        Map<String,Object> map = new HashMap<>();
+
+//        String preStr = "{\"resultMsg\":\"";
+//        String sufStr = "\"}";
 
 
         if (phone == null || phone.length() != 11) {
-            return preStr + "手机号格式错误" + sufStr;
+            map.put("resultMsg","手机号格式错误");
+            map.put("status",0);
+//            return preStr + "手机号格式错误" + sufStr;
+            return map;
         }
 
         try {
-            int a = Integer.parseInt(phone);
+            long a = Long.parseLong(phone);
 
             MsgCode msgCode = new MsgCode(0);
             boolean result = SmsSingleSender.send("86", phone, msgCode.getCode());
+            System.out.println(msgCode);
             String msg;
 
             if (!result) {
                 msg = "发送失败，请稍后再试";
+                map.put("status",0);
             }
             else {
                 msg = "验证码已发送，5分钟内有效";
+                map.put("status",1);
                 session.setAttribute(phone, msgCode);
             }
-            return preStr + msg + sufStr;
+            map.put("resultMsg",msg);
+//            return preStr + msg + sufStr;
+            return map;
         }
         catch (NumberFormatException e){
             e.printStackTrace();
-            return preStr + "手机号格式错误" + sufStr;
+            map.put("resultMsg","发送失败，请稍后再试");
+            map.put("status",0);
+//            return preStr + "手机号格式错误" + sufStr;
+            return map;
         }
     }
 }
