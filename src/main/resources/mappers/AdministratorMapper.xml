@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.csu.mypetstore.persistence.AdministratorMapper">
+    <select id="getAdministratorByUsername" parameterType="String" resultType="Administrator">
+        SELECT
+      ADMINISTRATOR.USERNAME,
+      SIGNON.PASSWORD,
+      ADMINISTRATOR.SEX,
+      ADMINISTRATOR.PHONE,
+      ADMINISTRATOR.EMAIL,
+      ADMINISTRATOR.ROLE,
+      ADMINISTRATOR.REMARK
+    FROM ADMINISTRATOR, SIGNON
+    WHERE ADMINISTRATOR.USERNAME = #{username}
+      AND SIGNON.USERNAME = ADMINISTRATOR.USERNAME
+
+    </select>
+
+    <select id="getAdministratorByUsernameAndPassword" parameterType="administrator" resultType="administrator">
+    SELECT
+      ADMINISTRATOR.USERNAME,
+      ADMINISTRATOR.SEX,
+      SIGNON.PASSWORD,
+      ADMINISTRATOR.PHONE,
+      ADMINISTRATOR.EMAIL,
+      ADMINISTRATOR.ROLE,
+      ADMINISTRATOR.REMARK
+    FROM ADMINISTRATOR, SIGNON
+    WHERE ADMINISTRATOR.USERNAME = #{username}
+      AND SIGNON.PASSWORD = #{password}
+      AND SIGNON.USERNAME = ADMINISTRATOR.USERNAME
+  </select>
+
+    <insert id="insertAdministrator" parameterType="Administrator">
+    INSERT INTO ADMINISTRATOR
+      (USERNAME, SEX, PHONE, EMAIL, ROLE, REMARK)
+    VALUES
+      (#{username}, #{sex}, #{phone}, #{email}, #{role},#{remark})
+    </insert>
+
+    <insert id="insertSignon" parameterType="administrator">
+    INSERT INTO SIGNON (PASSWORD,USERNAME)
+    VALUES (#{password}, #{username})
+  </insert>
+
+    <update id="updateAdministrator" parameterType="Administrator">
+            UPDATE ADMINISTRATOR SET
+      USERNAME = #{username},
+      SEX = #{sex},
+      PHONE = #{phone},
+      EMAIL = #{email},
+      ROLE = #{role},
+      REMARK = #{remark},
+    WHERE USERNAME = #{username}
+    </update>
+
+    <update id="updateSignon" parameterType="administrator">
+    UPDATE SIGNON SET PASSWORD = #{password}
+    WHERE USERNAME = #{username}
+  </update>
+
+</mapper>
