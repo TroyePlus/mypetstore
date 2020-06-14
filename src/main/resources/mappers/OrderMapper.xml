@@ -85,4 +85,84 @@
         INSERT INTO ORDERSTATUS (ORDERID, LINENUM, TIMESTAMP, STATUS)
         VALUES (#{orderId,jdbcType=NUMERIC}, #{orderId,jdbcType=NUMERIC}, #{orderDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
     </insert>
+
+    <select id="getOrdersByCategory" parameterType="String" resultType="Order">
+        select DISTINCT
+				BILLADDR1 AS billAddress1,
+        BILLADDR2 AS billAddress2,
+        BILLCITY,
+        BILLCOUNTRY,
+        BILLSTATE,
+        BILLTOFIRSTNAME,
+        BILLTOLASTNAME,
+        BILLZIP,
+        SHIPADDR1 AS shipAddress1,
+        SHIPADDR2 AS shipAddress2,
+        SHIPCITY,
+        SHIPCOUNTRY,
+        SHIPSTATE,
+        SHIPTOFIRSTNAME,
+        SHIPTOLASTNAME,
+        SHIPZIP,
+        CARDTYPE,
+        COURIER,
+        CREDITCARD,
+        EXPRDATE AS expiryDate,
+        LOCALE,
+        ORDERDATE,
+        o.orderid,
+        TOTALPRICE,
+        USERID AS username,
+        os.STATUS
+from orders o,orderstatus os,lineitem l NATURAL JOIN item i NATURAL JOIN product p WHERE p.category = #{catid} and o.orderid=l.orderid and o.orderid = os.orderid
+    </select>
+
+    <select id="getLineItemsByOrder" parameterType="int" resultType="LineItem">
+        select l.itemid, l.linenum ,l.orderid ,l.quantity ,l.unitprice from orders natural join lineitem l  where orders.orderid = #{orderid}
+    </select>
+
+    <select id="getAllOrders" resultType="Order">
+        select 				BILLADDR1 AS billAddress1,
+        BILLADDR2 AS billAddress2,
+        BILLCITY,
+        BILLCOUNTRY,
+        BILLSTATE,
+        BILLTOFIRSTNAME,
+        BILLTOLASTNAME,
+        BILLZIP,
+        SHIPADDR1 AS shipAddress1,
+        SHIPADDR2 AS shipAddress2,
+        SHIPCITY,
+        SHIPCOUNTRY,
+        SHIPSTATE,
+        SHIPTOFIRSTNAME,
+        SHIPTOLASTNAME,
+        SHIPZIP,
+        CARDTYPE,
+        COURIER,
+        CREDITCARD,
+        EXPRDATE AS expiryDate,
+        LOCALE,
+        ORDERDATE,
+        o.orderid,
+        TOTALPRICE,
+        USERID AS username,
+        os.STATUS from orders o,orderstatus os where o.orderid = os.orderid
+    </select>
+
+    <delete id="deleteOrderById" parameterType="int">
+        delete from orders where orderid = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderStatusById" parameterType="int">
+        delete from orderstatus where orderid = #{orderId}
+    </delete>
+
+    <delete id="deleteLineItemsById" parameterType="int">
+        delete from lineitem where orderid = #{orderId}
+    </delete>
+
+    <update id="updateOrderStatus">
+        update orderstatus set status = #{status} where orderid = #{orderId}
+    </update>
 </mapper>

@@ -1,9 +1,6 @@
 package org.csu.mypetstore.controller;
 
-import org.csu.mypetstore.domain.Account;
-import org.csu.mypetstore.domain.Cart;
-import org.csu.mypetstore.domain.LineItem;
-import org.csu.mypetstore.domain.Order;
+import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,4 +134,16 @@ public class OrderController {
         }
         return "order/ConfirmOrder";
     }
+
+    @DeleteMapping("deleteOrder")
+    public void deleteOrder(@RequestParam int orderId){
+        orderService.deleteOrder(orderId);
+    }
+
+    @PostMapping("updateOrderStatus")
+    public void updateOrderStatus(@RequestParam int orderId,String status){
+        orderService.updateOrderStatus(orderId,status);
+    }
+
+
 }

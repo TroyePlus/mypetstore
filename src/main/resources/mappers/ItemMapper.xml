@@ -67,4 +67,8 @@
         update item set stockquantity = stockquantity - #{decreaseQuantity} where itemid = #{itemId}
     </update>
 
+    <select id="getCategoryByItemId" parameterType="String" resultType="String">
+        select p.category from item i NATURAL join product p where i.itemid = #{itemId}
+    </select>
+
 </mapper>

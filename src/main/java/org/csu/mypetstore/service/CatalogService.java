@@ -71,4 +71,7 @@ public class CatalogService {
     public int getStockQuantity(String itemId){return itemMapper.getStockQuantity(itemId);}
 
     public void updateStockQuantity(String itemId,int decreaseQuantity){itemMapper.updateStockQuantity(itemId,decreaseQuantity);}
+
+    //
+    public String getCategoryByItemId(String itemId){return itemMapper.getCategoryByItemId(itemId);}
 }

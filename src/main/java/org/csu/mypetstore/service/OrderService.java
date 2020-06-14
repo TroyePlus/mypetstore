@@ -84,5 +84,49 @@ public class OrderService {
         return sequence.getNextId();
     }
 
+    public List<Order> getOrdersByCategory(String catid){
+        List<Order> orderList =  orderMapper.getOrdersByCategory(catid);
+        //为order添加对应的lineitem
+        for (Order o : orderList
+             ) {
+            int orderid = o.getOrderId();
+            List<LineItem > lineItemList = orderMapper.getLineItemsByOrder(orderid);
+            o.setLineItems(lineItemList);
+        }
+
+        return orderList;
+
+    }
+
+    public List<Order> getAllOrders(){
+        List<Order> allOrders = orderMapper.getAllOrders();
+
+        for (Order o : allOrders
+        ) {
+            int orderid = o.getOrderId();
+            List<LineItem > lineItemList = orderMapper.getLineItemsByOrder(orderid);
+            o.setLineItems(lineItemList);
+        }
+
+        return allOrders;
+    }
+
+    @Transactional
+    public void deleteOrder(int orderId){
+        orderMapper.deleteOrderById(orderId);
+        orderMapper.deleteOrderStatusById(orderId);
+        orderMapper.deleteLineItemsById(orderId);
+    }
+
+    public void updateOrderStatus(int orderId,String status){
+        orderMapper.updateOrderStatus(orderId,status);
+    }
+
+
+
+
+
+
+
 
 }
