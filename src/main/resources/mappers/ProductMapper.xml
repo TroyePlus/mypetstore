@@ -33,6 +33,20 @@
     WHERE lower(name) like #{value}
   </select>
 
+  <select id="getProductListWithName" parameterType="string" resultType="product">
+    select
+      productid,
+      name,
+      descn as description,
+      category as categoryId
+    from product
+    where name like concat('%',#{name},'%')
+  </select>
+
+  <select id="getItemCountByProductId" resultType="Label">
+    select productid as label, count(itemid) as count from item group by productid
+  </select>
+
   <select id="getProductName" parameterType="String" resultType="String">
     SELECT name from product where name like  concat('%',#{name},'%')
   </select>
@@ -41,4 +55,21 @@
     SELECT name from product
   </select>
 
+  <insert id="insertProduct" parameterType="Product">
+    insert into product
+    (productid, category, name, descn)
+    values (#{productId}, #{categoryId}, #{name}, #{description})
+  </insert>
+
+  <update id="updateProduct" parameterType="Product">
+    update product
+    set category = #{categoryId},
+        name = #{name},
+        descn = #{description}
+    where productid = #{productId}
+  </update>
+
+  <delete id="deleteProduct" parameterType="string">
+    delete from product where productid = #{productId}
+  </delete>
 </mapper>

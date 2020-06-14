@@ -12,4 +12,9 @@ public interface CategoryMapper {
 
     Category getCategory(String categoryId);
 
+    int insertCategory(Category category);
+
+    int updateCategory(Category category);
+
+    int deleteCategory(String categoryId);
 }

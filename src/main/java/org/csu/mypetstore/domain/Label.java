@@ -28,4 +28,12 @@ public class Label {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        return "Label{" +
+                "label='" + label + '\'' +
+                ", count=" + count +
+                '}';
+    }
 }

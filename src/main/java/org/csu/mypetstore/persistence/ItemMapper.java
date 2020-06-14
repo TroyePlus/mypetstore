@@ -1,5 +1,6 @@
 package org.csu.mypetstore.persistence;
 
+import org.apache.ibatis.annotations.Param;
 import org.csu.mypetstore.domain.Item;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,11 @@ public interface ItemMapper {
 
     String getCategoryByItemId(String itemId);
 
+    int insertItem(Item item);
+
+    int insertInventoryRecord(@Param("itemId")String itemId,@Param("quantity")int quantity);
+
+    int updateItem(Item item);
+
+    int deleteItem(String itemId);
 }
