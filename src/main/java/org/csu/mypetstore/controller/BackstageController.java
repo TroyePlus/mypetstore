@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-    @RequestMapping("/backstage/")
+@RequestMapping("/backstage/")
 public class BackstageController {
 
     @Autowired
