@@ -2,7 +2,7 @@ package org.csu.mypetstore.domain;
 
 import java.math.BigDecimal;
 
-public class LineItem {
+public class  LineItem {
     private int orderId;
     private int lineNumber;
     private int quantity;

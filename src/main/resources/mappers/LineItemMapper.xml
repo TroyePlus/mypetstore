@@ -14,6 +14,7 @@
     FROM LINEITEM
     WHERE ORDERID = #{orderId}
   </select>
+
     <insert id="insertLineItem" parameterType="LineItem">
     INSERT INTO LINEITEM (ORDERID, LINENUM, ITEMID, QUANTITY, UNITPRICE)
     VALUES (#{orderId}, #{lineNumber}, #{itemId}, #{quantity}, #{unitPrice})

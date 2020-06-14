@@ -34,6 +34,7 @@ public class Order {
     private String expiryDate;
     private String cardType;
     private String locale;
+    // completed pay ship receipt failure
     private String status;
     private List<LineItem> lineItems = new ArrayList<LineItem>();
 
