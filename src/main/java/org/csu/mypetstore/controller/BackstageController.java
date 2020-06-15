@@ -1,9 +1,6 @@
 package org.csu.mypetstore.controller;
 
-import org.csu.mypetstore.domain.Administrator;
-import org.csu.mypetstore.domain.LineItem;
-import org.csu.mypetstore.domain.Order;
-import org.csu.mypetstore.domain.Product;
+import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.CatalogService;
@@ -14,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,8 +157,12 @@ public class BackstageController {
         return categoryMap;
     }
 
-
-
-
-
+    //新增商品类型(Category)
+    @PostMapping("addCategory")
+    public void addCategory(Category category, HttpSession session){
+        Administrator administrator = (Administrator) session.getAttribute("administrator");
+        if(administrator!=null) {
+            catalogService.insertCategory(category);
+        }
+    }
 }

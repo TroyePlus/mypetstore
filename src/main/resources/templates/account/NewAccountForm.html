@@ -11,7 +11,7 @@
 <div id="Content">
 
     <div id="Catalog">
-        <form action="/account/newAccount" name="register" method="post" th:object="${newAccount}">
+        <form action="/account/newAccount" name="register" method="post" th:object="${account}">
 
             <h3>User Information</h3>
 
@@ -22,11 +22,11 @@
                 </tr>
                 <tr>
                     <td>New password:</td>
-                    <td><input type="text" name="password"> </td>
+                    <td><input type="password" name="password"> </td>
                 </tr>
                 <tr>
                     <td>Repeat password:</td>
-                    <td><input type="text" name="repeatedPassword"> </td>
+                    <td><input type="password" name="repeatedPassword"> </td>
                 </tr>
                 <tr th:if="${msg!=null}">
                     <p th:text="${msg}"></p>
