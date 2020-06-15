@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
@@ -13,7 +13,7 @@
         <!--[if lte IE 8]>
 		  <link rel="stylesheet" href="../assets/css/ace-ie.min.css" />
 		<![endif]-->
-		<script src="../js/jquery-1.9.1.min.js"></script>
+		<script src="../js/jquery-3.4.1.min.js"></script>
         <script src="../assets/js/bootstrap.min.js"></script>
 		<script src="../assets/js/typeahead-bs2.min.js"></script> 
         <script type="text/javascript" src="../js/H-ui.js"></script>
@@ -29,7 +29,7 @@
 <body>
 <div class="margin clearfix">
 <div class="Order_Details_style">
-<div class="Numbering">订单编号:<b>NJHDXJ201509-001</b></div></div>
+<div class="Numbering">订单编号:<b th:text="${order.orderId}"></b></div></div>
  <div class="detailed_style">
  <!--收件人信息-->
     <div class="Receiver_style">
@@ -37,60 +37,45 @@
      <div class="Info_style clearfix">
         <div class="col-xs-3">  
          <label class="label_name" for="form-field-2"> 收件人姓名： </label>
-         <div class="o_content">张孝全</div>
+         <div class="o_content" th:text="${order.username}"></div>
         </div>
         <div class="col-xs-3">  
          <label class="label_name" for="form-field-2"> 收件人电话： </label>
-         <div class="o_content">16543432343</div>
+         <div class="o_content" >15673450108</div>
         </div>
          <div class="col-xs-3">  
-         <label class="label_name" for="form-field-2"> 收件地邮编： </label>
-         <div class="o_content">104545</div>
+         <label class="label_name" for="form-field-2" > 收件地邮编： </label>
+         <div class="o_content" th:text="${order.billZip}"></div>
         </div>
          <div class="col-xs-3">  
          <label class="label_name" for="form-field-2"> 收件地址： </label>
-         <div class="o_content">江苏南京市雨花台区郁金香软件大厦3懂3单元302室</div>
+         <div class="o_content" th:text="${order.shipAddress1}"></div>
         </div>
      </div>
     </div>
     <!--订单信息-->
     <div class="product_style">
     <div class="title_name">产品信息</div>
-    <div class="Info_style clearfix">
-      <div class="product_info clearfix">
-      <a href="#" class="img_link"><img src="../products/p_3.jpg" /></a>
-      <span>
-      <a href="#" class="name_link">美果汇 美国进口嘎啦果苹果6粒装 加力果 姬娜果 伽利果 新鲜应季水果</a>
-      <b>也称为姬娜果，饱满色艳，个头小</b>
-      <p>规格：500g/斤</p>
-      <p>数量：2kg</p>
-      <p>价格：<b class="price"><i>￥</i>56</b></p>  
-      <p>状态：<i class="label label-success radius">有货</i></p>   
-      </span>
-      </div>
-      <div class="product_info clearfix">
-      <a href="#" class="img_link"><img src="../products/p_5.jpg" /></a>
-      <span>
-      <a href="#" class="name_link">美果汇 美国进口嘎啦果苹果6粒装 加力果 姬娜果 伽利果 新鲜应季水果</a>
-      <b>也称为姬娜果，饱满色艳，个头小</b>
-      <p>规格：39.9/5kg</p>
-      <p>数量：2</p>
-      <p>价格：<b class="price"><i>￥</i>69.9</b></p>  
-      <p>状态：<i class="label label-success radius">有货</i></p>   
-      </span>
-      </div>
-       <div class="product_info clearfix">
-      <a href="#" class="img_link"><img src="../products/p_8.jpg"/></a>
-      <span>
-      <a href="#" class="name_link">美果汇 美国进口嘎啦果苹果6粒装 加力果 姬娜果 伽利果 新鲜应季水果</a>
-      <b>也称为姬娜果，饱满色艳，个头小</b>
-      <p>规格：500g/斤</p>
-      <p>数量：2kg</p>
-      <p>价格：<b class="price"><i>￥</i>56</b></p>  
-      <p>状态：<i class="label label-success radius">有货</i></p>   
-      </span>
-      </div>
-    </div>
+        <div th:each="lineItem:${lineItemList}">
+            <div class="Info_style clearfix">
+                <div class="product_info clearfix">
+                    <a href="#" class="img_link"><img th:src="${lineItem.item.product.descriptionImage}" /></a>
+                    <span>
+                    <a href="#" class="name_link" th:text="${lineItem.item.product.descriptionText}">Great companion for up to 75 years</a>
+                        <br>
+                    <b th:text="${lineItem.item.product.categoryId}"></b>
+                    <br>
+                    数量：<input style="width:30px;height:20px;"  th:value="${lineItem.quantity}" th:name="${lineItem.lineNumber}"></input> <button type="button" class="btn_search" th:name="${lineItem.lineNumber}">修改</button>
+                    <p >价格：<b class="price" th:text="${lineItem.unitPrice}"><i>￥</i></b></p>
+                    <p>状态：
+                        <i class="label label-success radius" th:if="${lineItem.item.inStock}">有货</i>
+                        <i class="label label-success radius" th:if="${!lineItem.item.inStock}">缺货</i>
+                    </p>
+                  </span>
+                </div>
+            </div>
+        </div>
+
     </div>
     <!--总价-->
     <div class="Total_style">
@@ -116,7 +101,7 @@
          <div class="o_content">2016-7-19</div>
         </div>
         </div>
-      <div class="Total_m_style"><span class="Total">总数：<b>10</b></span><span class="Total_price">总价：<b>345</b>元</span></div>
+      <div class="Total_m_style"><span class="Total">总数：<b id="totalCount"></b></span><span class="Total_price">总价：<b th:text="${order.totalPrice}" id="totalPrice"></b>元</span></div>
     </div>
     
     <!--物流信息-->
@@ -175,3 +160,55 @@
 </div>
 </body>
 </html>
+
+<script th:inline="javascript">
+    $(function () {
+        var count;
+        var lineNumber;
+
+        //设置总数
+        var totalCount = 0;
+        $("input").each(function () {
+            totalCount = totalCount + Number($(this).val());
+            console.log(totalCount);
+        })
+
+        $("#totalCount").text(totalCount);
+
+
+        $(document).off("click", "button").on("click", "button", function () {
+            lineNumber = $(this).attr("name");
+            console.log("---attention-------");
+            console.log(lineNumber);
+            var obj = $("input[name="+lineNumber+"]");
+            count = obj.val();
+            console.log(count);
+
+            $.ajax({
+                url:"/order/updateLineItemCount",
+                type:"POST",
+                data:{"lineNumber":lineNumber,"count":count,
+                    "orderId":[[${order.orderId}]]},
+                dataType:"JSON",
+                success:function (data) {
+                    console.log(data["totalCount"]);
+                    console.log(data["totalPrice"]);
+                    $("#totalCount").text(data["totalCount"]);
+                    $("#totalPrice").text(data["totalPrice"]);
+
+                },
+                error:function (data) {
+                    console.log(data["totalCount"]);
+                    console.log(data["totalPrice"]);
+                    $("#totalCount").text(data["totalCount"]);
+                    $("#totalPrice").text(data["totalPrice"]);
+                }
+
+            })
+
+        })
+
+    })
+
+
+</script>

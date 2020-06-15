@@ -1,9 +1,6 @@
 package org.csu.mypetstore.controller;
 
-import org.csu.mypetstore.domain.Administrator;
-import org.csu.mypetstore.domain.LineItem;
-import org.csu.mypetstore.domain.Order;
-import org.csu.mypetstore.domain.Product;
+import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.CatalogService;
@@ -15,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +90,27 @@ public class BackstageController {
         return "backstage/"+cid;
     }
 
+    @GetMapping("viewOrder_detailed")
+    public String viewOrder_detailed(@RequestParam int orderId,Model model){
+
+        Order order = orderService.getOrder(orderId);
+
+        List<LineItem> lineItemList = order.getLineItems();
+
+        for (LineItem l :lineItemList
+             ) {
+            Item item = l.getItem();
+            Product product = item.getProduct();
+            processProductDescription(product);
+
+        }
+        model.addAttribute("order",order);
+        model.addAttribute("lineItemList",lineItemList);
+
+        return "backstage/order_detailed.html";
+    }
+
+
     //统计订单类别数量
     @GetMapping("categoryCount")
     @ResponseBody //返回前端JSON数据
@@ -157,6 +176,12 @@ public class BackstageController {
 
 
         return categoryMap;
+    }
+
+    private static void processProductDescription(Product product){
+        String [] temp = product.getDescription().split("\"");
+        product.setDescriptionImage(temp[1]);
+        product.setDescriptionText(temp[2].substring(1));
     }
 
 

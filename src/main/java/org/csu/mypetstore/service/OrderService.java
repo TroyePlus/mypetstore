@@ -62,6 +62,7 @@ public class OrderService {
             LineItem lineItem = (LineItem) order.getLineItems().get(i);
             Item item = itemMapper.getItem(lineItem.getItemId());
             item.setQuantity(itemMapper.getInventoryQuantity(lineItem.getItemId()));
+            item.setInStock(item.getQuantity()>lineItem.getQuantity()?true:false);
             lineItem.setItem(item);
         }
 
@@ -122,7 +123,9 @@ public class OrderService {
         orderMapper.updateOrderStatus(orderId,status);
     }
 
+    public void updateLineItemCount(int lineNumber,int count){orderMapper.updateLineItemCount(lineNumber,count);}
 
+    public void updateTotalPrice(int orderId,int totalPrice){orderMapper.updateTotalPrice(orderId,totalPrice);}
 
 
 
