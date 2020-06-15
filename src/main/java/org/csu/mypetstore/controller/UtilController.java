@@ -44,7 +44,7 @@ public class UtilController {
     @GetMapping("/findResult")
     public void findResult(@RequestParam("keyword") String keyword, HttpServletResponse response) throws IOException {
         //向server层调用相应的业务
-        List<Product> productList = catalogService.searchProductList(keyword);
+        List<String> productList = catalogService.getProductName(keyword);
 
         response.setContentType("text/xml");
         PrintWriter out = response.getWriter();

@@ -71,4 +71,46 @@
         select p.category from item i NATURAL join product p where i.itemid = #{itemId}
     </select>
 
+    <insert id="insertItem" parameterType="Item">
+        insert into item
+        (itemid, stockquantity, productid, listprice, unitcost, supplier, status, attr1)
+        values (#{itemId}, #{stockQuantity}, #{productId}, #{listPrice}, #{unitCost}, #{supplierId}, #{status}, #{attribute1})
+    </insert>
+
+    <insert id="insertInventoryRecord">
+        insert into inventory
+        (itemid, qty)
+        values (#{itemId},#{quantity})
+    </insert>
+
+    <update id="updateItem" parameterType="Item">
+        update item
+        <set>
+            <if test="productId != null">
+                productid = #{productId},
+            </if>
+            <if test="listPrice !=null">
+                listprice = #{listPrice},
+            </if>
+            <if test="unitCost != null">
+                unitcost = #{unitCost},
+            </if>
+            <if test="supplierId != null">
+                supplier = #{supplierId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="attribute1 != null">
+                atrr1 = #{attribute1},
+            </if>
+        </set>
+        where itemid = #{itemId}
+    </update>
+
+    <delete id="deleteItem" parameterType="string">
+        delete a, b
+        from item a left join inventory b on a.itemid = b.itemid
+        where a.itemid = #{itemId}
+    </delete>
 </mapper>
