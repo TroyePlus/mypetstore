@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户添加</title>
+    <link rel="stylesheet" href="/assets/layui/css/layui.css" media="all">
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="addForm">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" autocomplete="off" placeholder="请输入昵称" lay-verify="required"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="text" name="email" lay-verify="required|email" autocomplete="off" placeholder="请输入邮箱"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">姓</label>
+            <div class="layui-input-block">
+                <input type="text" name="firstName" autocomplete="off" placeholder="请输入姓"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">名</label>
+            <div class="layui-input-block">
+                <input type="text" name="lastName" autocomplete="off" placeholder="请输入名"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">国家</label>
+            <div class="layui-input-block">
+                <input type="text" name="country" autocomplete="off" placeholder="请输入国家"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">州</label>
+            <div class="layui-input-block">
+                <input type="text" name="state" autocomplete="off" placeholder="请输入州"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">地址1</label>
+            <div class="layui-input-block">
+                <input type="text" name="address1" autocomplete="off" placeholder="请输入地址1"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">地址2</label>
+            <div class="layui-input-block">
+                <input type="text" name="address2" autocomplete="off" placeholder="请输入地址2"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">城市</label>
+            <div class="layui-input-block">
+                <input type="text" name="city" autocomplete="off" placeholder="请输入城市"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">邮编</label>
+            <div class="layui-input-block">
+                <input type="text" name="zip" autocomplete="off" placeholder="请输入邮编"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">电话号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" autocomplete="off" placeholder="请输入电话号码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">启用状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="0" title="启用" checked="">
+                <input type="radio" name="status" value="1" title="禁用">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="margin-left: 110px">
+        <div class="layui-input-block">
+            <butaton class="layui-btn" lay-submit lay-filter="edit">立即提交</butaton>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="/assets/layui/layui.js" charset="utf-8"></script>
+<script>
+    var initData;
+
+    function initForm(data) {
+        var jsonString = JSON.stringify(data);
+        initData = JSON.parse(jsonString);
+    }
+
+    layui.use(['form', 'jquery', 'element', 'layer'], function () {
+        var element = layui.element;
+        $ = layui.jquery,
+            layer = layui.layer,
+            form = layui.form;
+
+        form.val("addForm", initData);
+
+
+        form.on('submit(edit)', function (data) {
+            var url = "updateMember";
+            $.post(url, data.field, function (result) {
+                if (result.success) {
+                    layer.msg(result.msg, function () {
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    })
+                } else {
+                    layer.msg(result.msg)
+                    return;
+                }
+            }, 'json');
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

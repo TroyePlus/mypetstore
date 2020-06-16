@@ -4,11 +4,15 @@ import org.csu.mypetstore.domain.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AccountMapper {
     Account getAccountByUsername(String username);
 
     Account getAccountByUsernameAndPassword(Account account);
+
+    void updateAccountStatusByUserName(Account account);
 
     String getUserNameByPhone(String phone);
 
@@ -23,4 +27,10 @@ public interface AccountMapper {
     void updateProfile(Account account);
 
     void updateSignon(Account account);
+
+    List<Account> getList(Account account);
+
+    void deletAccountByUserName(Account account);
+
+    void deletSignon(Account account);
 }

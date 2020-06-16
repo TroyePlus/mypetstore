@@ -57,6 +57,15 @@
       AND PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY
   </select>
 
+  <select id="getList" resultType="org.csu.mypetstore.domain.Account" parameterType="Account">
+    SELECT a.email,a.firstname,a.lastname,a.STATUS,a.addr1 as address1,a.addr2 as address2,a.city,a.state,a.zip,a.country,a.phone,s.username FROM account a LEFT JOIN signon s ON a.userid = s.username
+      <trim prefix="WHERE" prefixOverrides="AND | OR" >
+          <if test="username != null and username != ''">
+              AND a.userid like CONCAT(CONCAT('%', #{username}), '%')
+          </if>
+      </trim>
+  </select>
+
   <select id="getUserNameByPhone" parameterType="string" resultType="string">
     select userid
     from account
@@ -97,6 +106,12 @@
     WHERE USERID = #{username}
     </update>
 
+  <update id="updateAccountStatusByUserName" parameterType="Account">
+     UPDATE ACCOUNT SET
+      status = #{status}
+    WHERE USERID = #{username}
+    </update>
+
     <update id="updateProfile" parameterType="account">
     UPDATE PROFILE SET
       LANGPREF = #{languagePreference},
@@ -105,9 +120,17 @@
   </update>
 
 
-    <update id="updateSignon" parameterType="account">
+  <update id="updateSignon" parameterType="account">
     UPDATE SIGNON SET PASSWORD = #{password}
     WHERE USERNAME = #{username}
   </update>
+
+  <delete id="deletAccountByUserName" parameterType="account">
+    delete from account where USERID = #{username}
+  </delete>
+
+  <delete id="deletSignon" parameterType="account">
+    delete from SIGNON where USERNAME = #{username}
+  </delete>
 
 </mapper>

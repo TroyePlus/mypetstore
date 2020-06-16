@@ -77,16 +77,16 @@
         </dependency>
 
         <!-- alipay begin -->
-        <dependency>
-            <groupId>com.alipay</groupId>
-            <artifactId>sdk-java</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alipay</groupId>
-            <artifactId>alipay-trade-sdk</artifactId>
-            <version>20161215</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.alipay</groupId>-->
+            <!--<artifactId>sdk-java</artifactId>-->
+            <!--<version>3.3.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.alipay</groupId>-->
+            <!--<artifactId>alipay-trade-sdk</artifactId>-->
+            <!--<version>20161215</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -106,6 +106,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--引入pageHelper分页插件 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.0.0</version>
         </dependency>
 
         <!--解决@ConfigurationProperties不生效-->
