@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +144,35 @@ public class OrderController {
     @PostMapping("updateOrderStatus")
     public void updateOrderStatus(@RequestParam int orderId,String status){
         orderService.updateOrderStatus(orderId,status);
+    }
+
+    @PostMapping("updateLineItemCount")
+    @ResponseBody
+    public Map<String,Integer> updateLineItemCount(@RequestParam Integer lineNumber,Integer count,int orderId,Model model){
+        orderService.updateLineItemCount(lineNumber,count);
+
+        Order order = orderService.getOrder(orderId);
+        List<LineItem> lineItemList = order.getLineItems();
+        Map<String,Integer> map = new HashMap<>();
+
+        int totalPrice = 0;
+        int totalCount = 0;
+
+        for (LineItem l:lineItemList
+        ) {
+            BigDecimal unitPrice = l.getUnitPrice();
+            int quantity = (l.getLineNumber()==lineNumber)?count:l.getQuantity();
+            totalPrice = totalPrice + unitPrice.intValue() * quantity;
+            totalCount += quantity;
+        }
+
+        map.put("totalPrice",totalPrice);
+        map.put("totalCount",totalCount);
+        orderService.updateTotalPrice(orderId,totalPrice);
+
+        return map;
+
+
     }
 
 

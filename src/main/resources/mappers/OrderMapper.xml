@@ -165,4 +165,12 @@ from orders o,orderstatus os,lineitem l NATURAL JOIN item i NATURAL JOIN product
     <update id="updateOrderStatus">
         update orderstatus set status = #{status} where orderid = #{orderId}
     </update>
+
+    <update id="updateLineItemCount" >
+        update lineitem set quantity = #{count} where linenum = #{lineNumber}
+    </update>
+
+    <update id="updateTotalPrice" parameterType="int">
+        update orders set totalprice = #{totalPrice} where orderid = #{orderId}
+    </update>
 </mapper>

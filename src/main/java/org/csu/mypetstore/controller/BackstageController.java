@@ -11,15 +11,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/backstage/")
+    @RequestMapping("/backstage/")
 public class BackstageController {
 
     @Autowired
@@ -90,6 +90,27 @@ public class BackstageController {
         return "backstage/"+cid;
     }
 
+    @GetMapping("viewOrder_detailed")
+    public String viewOrder_detailed(@RequestParam int orderId,Model model){
+
+        Order order = orderService.getOrder(orderId);
+
+        List<LineItem> lineItemList = order.getLineItems();
+
+        for (LineItem l :lineItemList
+             ) {
+            Item item = l.getItem();
+            Product product = item.getProduct();
+            processProductDescription(product);
+
+        }
+        model.addAttribute("order",order);
+        model.addAttribute("lineItemList",lineItemList);
+
+        return "backstage/order_detailed.html";
+    }
+
+
     //统计订单类别数量
     @GetMapping("categoryCount")
     @ResponseBody //返回前端JSON数据
@@ -157,12 +178,14 @@ public class BackstageController {
         return categoryMap;
     }
 
-    //新增商品类型(Category)
-    @PostMapping("addCategory")
-    public void addCategory(Category category, HttpSession session){
-        Administrator administrator = (Administrator) session.getAttribute("administrator");
-        if(administrator!=null) {
-            catalogService.insertCategory(category);
-        }
+    private static void processProductDescription(Product product){
+        String [] temp = product.getDescription().split("\"");
+        product.setDescriptionImage(temp[1]);
+        product.setDescriptionText(temp[2].substring(1));
     }
+
+
+
+
+
 }

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80017
 File Encoding         : 65001
 
-Date: 2020-04-08 11:05:23
+Date: 2020-06-14 11:10:54
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -40,6 +40,25 @@ CREATE TABLE `account` (
 -- ----------------------------
 INSERT INTO `account` VALUES ('j2ee', 'yourname@yourdomain.com', 'ABC', 'XYX', 'OK', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', '555-555-5555');
 INSERT INTO `account` VALUES ('Peak', '', '', '', null, '', '', '', '', '', '', '');
+
+-- ----------------------------
+-- Table structure for administrator
+-- ----------------------------
+DROP TABLE IF EXISTS `administrator`;
+CREATE TABLE `administrator` (
+  `username` varchar(30) NOT NULL,
+  `sex` varchar(6) DEFAULT NULL,
+  `phone` varchar(30) DEFAULT NULL,
+  `email` varchar(30) DEFAULT NULL,
+  `role` int(1) DEFAULT NULL,
+  `remark` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of administrator
+-- ----------------------------
+INSERT INTO `administrator` VALUES ('admin', '男', '15673450108', '1619817240@qq.com', '0', '兴趣使然');
 
 -- ----------------------------
 -- Table structure for bannerdata
@@ -76,7 +95,7 @@ CREATE TABLE `cart` (
 -- Records of cart
 -- ----------------------------
 INSERT INTO `cart` VALUES ('j2ee', 'EST-6', '20', '1');
-INSERT INTO `cart` VALUES ('Peak', 'EST-16', '1', '1');
+INSERT INTO `cart` VALUES ('Peak', 'ss', '22', '1');
 
 -- ----------------------------
 -- Table structure for category
@@ -213,7 +232,15 @@ CREATE TABLE `lineitem` (
 -- ----------------------------
 -- Records of lineitem
 -- ----------------------------
+INSERT INTO `lineitem` VALUES ('1001', '2', 'EST-5', '4', '12.00');
+INSERT INTO `lineitem` VALUES ('1001', '7', 'EST-3', '5', '12.00');
+INSERT INTO `lineitem` VALUES ('1001', '8', 'EST-1', '4', '12.00');
+INSERT INTO `lineitem` VALUES ('1003', '1', 'EST-7', '3', '12.00');
+INSERT INTO `lineitem` VALUES ('1003', '3', 'EST-23', '5', '12.00');
+INSERT INTO `lineitem` VALUES ('1003', '4', 'EST-24', '1', '12.00');
 INSERT INTO `lineitem` VALUES ('1013', '0', 'EST-6', '6', '12.00');
+INSERT INTO `lineitem` VALUES ('1013', '1', 'EST-19', '2', '12.00');
+INSERT INTO `lineitem` VALUES ('1013', '6', 'EST-18', '3', '12.00');
 
 -- ----------------------------
 -- Table structure for log
@@ -300,8 +327,8 @@ CREATE TABLE `orders` (
 -- Records of orders
 -- ----------------------------
 INSERT INTO `orders` VALUES ('1001', 'j2ee', '2019-10-27', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', 'UPS', '521.50', 'ABC', 'XYX', 'ABC', 'XYX', '999 9999 9999 9999', '12/03', 'Visa', 'CA');
-INSERT INTO `orders` VALUES ('1003', 'ACID', '2019-10-29', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', 'UPS', '15.50', 'ABC', 'XYX', 'ABC', 'XYX', '999 9999 9999 9999', '12/03', 'Visa', 'CA');
-INSERT INTO `orders` VALUES ('1013', 'j2ee', '2020-04-06', 'c', 'd', 'e', 'f', 'g', 'h', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', null, null, 'ABC', 'XYX', 'a', 'b', '999999999999', '12/03', 'Visa', null);
+INSERT INTO `orders` VALUES ('1003', 'ACID', '2019-10-29', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', 'UPS', '134.60', 'ABC', 'XYX', 'ABC', 'XYX', '999 9999 9999 9999', '12/03', 'Visa', 'CA');
+INSERT INTO `orders` VALUES ('1013', 'j2ee', '2020-04-06', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', '901 San Antonio Road', 'MS UCUP02-206', 'Palo Alto', 'CA', '94303', 'USA', 'UPS', '888.80', 'ABC', 'XYX', 'ABC', 'XYX', '999999999999', '12/03', 'Visa', 'CA');
 
 -- ----------------------------
 -- Table structure for orderstatus
@@ -311,16 +338,16 @@ CREATE TABLE `orderstatus` (
   `orderid` int(11) NOT NULL,
   `linenum` int(11) NOT NULL,
   `timestamp` date NOT NULL,
-  `status` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   PRIMARY KEY (`orderid`,`linenum`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orderstatus
 -- ----------------------------
-INSERT INTO `orderstatus` VALUES ('1001', '1001', '2019-10-27', 'P');
-INSERT INTO `orderstatus` VALUES ('1003', '1003', '2019-10-29', 'P');
-INSERT INTO `orderstatus` VALUES ('1013', '1013', '2020-04-06', null);
+INSERT INTO `orderstatus` VALUES ('1001', '1001', '2019-10-27', '待发货');
+INSERT INTO `orderstatus` VALUES ('1003', '1003', '2019-10-29', '待发货');
+INSERT INTO `orderstatus` VALUES ('1013', '1013', '2020-04-06', '待发货');
 
 -- ----------------------------
 -- Table structure for product
@@ -374,7 +401,7 @@ CREATE TABLE `profile` (
 -- Records of profile
 -- ----------------------------
 INSERT INTO `profile` VALUES ('j2ee', 'english', 'FISH', '1', '1');
-INSERT INTO `profile` VALUES ('Peak', 'CHINESE', 'DOGS', null, null);
+INSERT INTO `profile` VALUES ('Peak', 'CHINESE', 'DOGS', '1', '1');
 
 -- ----------------------------
 -- Table structure for sequence
@@ -397,7 +424,7 @@ INSERT INTO `sequence` VALUES ('ordernum', '1014');
 -- ----------------------------
 DROP TABLE IF EXISTS `signon`;
 CREATE TABLE `signon` (
-  `username` varchar(25) NOT NULL,
+  `username` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -405,6 +432,7 @@ CREATE TABLE `signon` (
 -- ----------------------------
 -- Records of signon
 -- ----------------------------
+INSERT INTO `signon` VALUES ('admin', '$2a$10$3sLEhmvrLjt2cYclHnKWvOCPHsJk9ROxRY7w5smF9wBPiiKrG2nEG');
 INSERT INTO `signon` VALUES ('j2ee', '$2a$10$A.fJzDcmuiUI.E2o5pmpuOM189jw/X9R7rIoY6.eAURPYz13N2VgC');
 INSERT INTO `signon` VALUES ('Peak', '$2a$10$ftVGj167kK2bpviAX0gX6ONxp0RTpvNjeoHFA1GStvLq0zrPEpJSK');
 

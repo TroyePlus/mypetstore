@@ -4,6 +4,7 @@ import org.csu.mypetstore.domain.LineItem;
 import org.csu.mypetstore.domain.Order;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -29,5 +30,9 @@ public interface OrderMapper {
     void deleteLineItemsById(int orderId);
 
     void updateOrderStatus(int orderId,String status);
+
+    void updateLineItemCount(int lineNumber,int count);
+
+    void updateTotalPrice(int orderId, int totalPrice);
 
 }
