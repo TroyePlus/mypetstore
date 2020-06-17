@@ -1,227 +1,157 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="renderer" content="webkit|ie-comp|ie-stand">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-<!--        <link href="../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>-->
-        <link href="../css/bootstrap.css" rel="stylesheet" type="text/css"/>
-        <link href="../assets/css/bootstrap-table.css" rel="stylesheet" type="text/css"/>
-<!--		  <link rel="stylesheet" href="../assets/css/font-awesome-ie7.min.css" type="text/css"/>-->
-<!--		  <link rel="stylesheet" href="../assets/css/ace-ie.min.css" type="text/css"/>-->
-	    <script src="../js/jquery-3.4.1.min.js" type="text/javascript"></script>
-        <script src="../assets/js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="../assets/js/bootstrap-table.js" type="text/javascript"></script>
-        <script src="../assets/js/bootstrap-table-zh-CN.js" type="text/javascript"></script>
-        <script src="../assets/layer/layer.js" type="text/javascript" ></script>
-        <script src="../assets/laydate/laydate.js" type="text/javascript"></script>
-        <script src="../js/lrtk.js" type="text/javascript" ></script>
-<title>产品列表</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>产品管理</title>
+    <link type="text/css" href="../layui/css/layui.css" rel="stylesheet">
+    <script type="text/javascript" src="../layui/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="../layui/layui.js"></script>
 </head>
 <body>
-<!--class="page-content clearfix"-->
-<!--产品列表展示-->
-<div class="container">
-<!--    <div id="products_style">-->
-<!--        <div class="border clearfix">-->
-<!--       <span class="l_f">-->
-<!--        <a href="picture-add.html" title="添加商品" class="btn btn-warning Order_form"><i class="icon-plus"></i>添加商品</a>-->
-<!--        <a href="javascript:ovid()" class="btn btn-danger"><i class="icon-trash"></i>批量删除</a>-->
-<!--       </span>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div>-->
-<!--        <table id="table" class="table">-->
-<!--        </table>-->
-<!--    </div>-->
-    <div class="row">
-        <div class="col-12">
-            <button type="button" class="btn btn-primary" style="text-align: right" id="addUser">添加</button>
-            <button type="button" class="btn btn-primary" style="text-align: right" id="deleteUser">删除</button>
-        </div><!-- end col-->
-    </div><!-- endrow-->
-    <a href="/backstage/testForm">测试用例</a>
-    <table id="table" class="table dt-responsive nowrap">
-    </table>
+<div class="layui-row">
+    Item ID:
+    <div class="layui-input-inline">
+        <input type="text" name="typeSearch" id="input" lay-verify="required"
+               placeholder="请输入" autocomplete="off" class="layui-input">
+    </div>
+    <button class="layui-btn" id="search" lay-event="edit"><i class="layui-icon">&#xe615;</i></button>
+
+<!--    行操作-->
+<script type="text/html" id="custom_toolbar">
+    <button class="layui-btn" lay-event="refresh"><i class="layui-icon">&#xe9aa;</i></button>
+    <button class="layui-btn" lay-event="add"><i class="layui-icon">添加商品</i></button>
+    <button class="layui-btn" lay-event="delete_batch"><i class="layui-icon">批量删除</i></button>
+</script>
 </div>
+<table class="layui-table" id="table" lay-filter="handle" style="width: 800px">
+</table>
+<div id="page"></div>
+<!--// id和toolbar 属性绑定-->
+<script type="text/html" id="barList">
+<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 </body>
-</html>
 <script type="text/javascript">
-    $(function () {
-        $('#table').bootstrapTable({
-            method: "get",
-            url: "/backstage/items",
-            undefinedText: "没有查询到相关商品",  //当数据为 undefined 时显示的字符
-            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-            striped: false,  // 设置为true会有隔行变色效果
-            search: true, //显示搜索框
-            showRefresh : true, // 是否显示刷新按钮
-            showToggle : true, // 是否显示详细视图和列表视图的切换按钮
-            // showColumns : true, // 是否显示列操作按钮  可选择显示的列信息
-            searchOnEnterKey: true,        //设置为 true时，按回车触发搜索方法，否则自动触发搜索方法
-            sidePagination: "server",          //分页方式：client客户端分页，server服务端分页（*）
-            pagination: true, //是否显示分页条
-            sortable: false,                     //是否启用排序
-            pageNumber : 1, //初始化加载第一页
-            pageSize: 10,// 如果设置了分页，每页数据条数
-            pageList : [5, 10, 20],//可选择单页记录数
-            singleSelect: false,  // 设置为true将禁止多选
-            clickToSelect : true, // 是否启用点击选中行
-            dataType: "json",
-            // uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
-            // pageNumber: 1,
-            contentType: "application/x-www-form-urlencoded",
-            queryParams : function(params) {
-                return {
-                    // 说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
-                    itemId : $('#input_search').val(),
-                    ps : params.limit, // 每页显示数量
-                    pn : parseInt(params.offset/params.limit)+1,//当前页面，默认是上面的设置的1(pageNumber)
-                    // pageSize : 4 , //第几页
-                    // offset : params.offset, // SQL语句起始索引
-                };
-            },
-            columns: [
-                {
-                    checkbox: "true",
-                    field: 'check',
-                    width: 20,
-                    align: 'center',
-                    valign: 'middle'   //是否显示复选框
-                }
-                ,
-                {
-                    title: "Item ID",
-                    field: 'itemId',
-                    width: 40,
-                    align: 'center',
-                    valign: 'middle'
-                },
-                {
-                    title: 'Product ID',
-                    field: 'product.productId',
-                    width: 40,
-                    align: 'center',
-                    valign: 'middle'
-                },
-                {
-                    title: 'Product Name',
-                    field: 'product.name',
-                    width: 50,
-                    align: 'center',
-                    valign: 'middle'
-                },
-                {
-                    title: 'Price',
-                    field: 'listPrice',
-                    width: 30,
-                    align: 'center',
-                    valign: 'middle'
-                },
-                {
-                    title: 'Attribute',
-                    field: 'attribute1',
-                    width: 40,
-                    align: 'center',
-                    valign: 'middle'
-                },
-                {
-                    field:'Button',
-                    title: '操作',
-                    width: 70,
-                    align: 'center',
-                    valign: 'middle',
-                    formatter: actionFormatter
-                }
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#table'
+            , url: '/backstage/items' //数据接口
+            , method: 'get'
+            , page: true //开启分页
+            , id: 'itemsReload'
+            , limits: [5,10,20]  //每页条数的选择项
+            , limit: 10 //每页默认显示的数量
+            , toolbar: true
+            , toolbar: '#custom_toolbar'
+            , cols: [
+                [
+                    {checkbox: true, fixed: true}
+                    , {field: 'itemId', title: 'Item ID', width: 100, sort: true, fixed: 'left'}
+                    , {field: 'd.product.productId  ', title: 'Product ID', width: 120, sort: true,
+                        templet:'<div>{{d.product.productId}}</div>'}
+                    , {field: 'd.product.name', title: 'Product Name', width: 150, sort: true,
+                        templet:'<div>{{d.product.name}}</div>'}
+                    , {field: 'listPrice', title: 'Price', width: 80, sort: true}
+                    , {field: 'attribute1', title: 'Attribute', width: 100}
+                    , {fixed: 'right', title:'操作', toolbar: '#barList', width:150,align:'center'}
+                ]
             ],
-            responseHandler: function (res) {   //自定义回传数据
-                if (res.status===1) {
-                    return {
-                        "total": res.pageInfo.total,//总页数
-                        "rows": res.pageInfo.list   //回传的数据
+            request: {
+                pageName: 'pn', //页码的参数名称，默认：page
+                limitName: 'ps', //每页数据量的参数名，默认：limit
+            }
+            , parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": 0, //解析接口状态
+                    // "msg": res.message, //解析提示文本
+                    "count": res.pageInfo.total, //解析数据长度
+                    "data": res.pageInfo.list //解析数据列表
+                };
+            }
+
+        });
+        $('#search').on('click',function () {
+            var input = $.trim($("#input").val());
+            search_reload(input);
+        });
+
+        // $('#input').keydown(function (event) {
+        //     //回车执行查询
+        //     if (event.keyCode == 13) {
+        //        search_reload();
+        //     }
+        // });
+
+        function search_reload(input) {
+            table.reload('itemsReload',{
+                    url: '/backstage/items',
+                    method: 'get',
+                    where: {
+                        itemId : input
                     }
                 }
-                else {
-                    layer.msg('请求失败,请稍后再试!',{icon:2,time:1000});
-                }
-            },
+            );
+        }
+
+        table.on('toolbar(handle)',function (obj) {
+            if(obj.event == 'refresh'){
+                var input = $('#input');
+                input.val("");          //清空输入
+                search_reload(null);    //重载
+                input.focus();          //输入框获取焦点
+                // input.requestFocus();
+            }else if(obj.event == 'add'){
+
+            }else if(obj.event == 'delete_batch'){
+                delete_in_batches();
+            }
         });
+
+        function delete_in_batches(){   //批量删除
+        }
+
+        //处理操作
+        table.on('tool(handle)',function (obj) {
+            var data = obj.data;
+            if(obj.event == 'edit'){
+
+            }else if(obj.event == 'del'){
+                item_delete(obj,data.itemId);
+            }
+        });
+
+        function item_delete(obj,id) {
+            layer.confirm('确认要删除吗？',function(index){
+                $.ajax({
+                    type: "delete",
+                    async: true,
+                    url: "/backstage/items",
+                    data: {
+                        "itemId" : id,
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        if(result.status==1){
+                            // obj.del();      //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.msg('已删除!',{icon:1,time:1000});
+                            search_reload(null);
+                        }
+                        else{
+                            layer.msg('删除失败,请稍后再试!',{icon:2,time:1000});
+                        }
+                    },
+                    error: function(errorMsg) {
+                        //请求失败时执行该函数
+                        console.log(errorMsg);
+                        layer.msg('删除失败,请稍后再试!',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
     });
-
-
-    //操作栏的格式化
-    // formatter 属于列参数，表示对于当前列的数据进行格式化操作，它是一个函数，有三个参数，分别是value，row,index
-    // value：表示当前单元格中的值
-    // row：表示当前行
-    // index：表示当前行的下标
-    // 可以使用return返回想要的数据显示在单元格中
-    function actionFormatter(value, row, index) { //当前列值、当前列、当前列下标
-        var id = value;
-        var result = "";
-        result += "<a href='javascript:;' class='btn btn-xs green' οnclick=\"EditViewById('" + id + "', view='view')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
-        result += "<a href='javascript:;' class='btn btn-xs blue' οnclick=\"editRole1('" + id + "');\" title='移除黑名单'><span class='glyphicon glyphicon-pencil'></span></a>";
-        result += "<a href='javascript:;' class='btn btn-xs red' οnclick=\"member_del(this,'"+id+"');\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
-
-        return result;
-    }
 </script>
-<script type="text/javascript">
-//初始化宽度、高度
-$(".table_menu_list").width($(window).width()-260);
- $(".table_menu_list").height($(window).height()-215);
-  //当文档窗口发生改变时 触发
-    $(window).resize(function(){
-	 $(".table_menu_list").width($(window).width()-260);
-	  $(".table_menu_list").height($(window).height()-215);
-	})
-
-
-/*产品-停用*/
-function member_stop(obj,id){
-	layer.confirm('确认要停用吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs " onClick="member_start(this,id)" href="javascript:;" title="启用"><i class="icon-ok bigger-120"></i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
-		$(obj).remove();
-		layer.msg('已停用!',{icon: 5,time:1000});
-	});
-}
-
-/*产品-启用*/
-function member_start(obj,id){
-	layer.confirm('确认要启用吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" class="btn btn-xs btn-success" onClick="member_stop(this,id)" href="javascript:;" title="停用"><i class="icon-ok bigger-120"></i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
-		$(obj).remove();
-		layer.msg('已启用!',{icon: 6,time:1000});
-	});
-}
-/*产品-编辑*/
-function member_edit(title,url,id,w,h){
-	layer_show(title,url,w,h);
-}
-
-/*产品-删除*/
-function member_del(obj,id){
-	layer.confirm('确认要删除吗？',function(index){
-		$(obj).parents("tr").remove();
-		layer.msg('已删除!',{icon:1,time:1000});
-	});
-}
-//面包屑返回值
-var index = parent.layer.getFrameIndex(window.name);
-parent.layer.iframeAuto(index);
-$('.Order_form').on('click', function(){
-	var cname = $(this).attr("title");
-	var chref = $(this).attr("href");
-	var cnames = parent.$('.Current_page').html();
-	var herf = parent.$("#iframe").attr("src");
-    parent.$('#parentIframe').html(cname);
-    parent.$('#iframe').attr("src",chref).ready();;
-	parent.$('#parentIframe').css("display","inline-block");
-	parent.$('.Current_page').attr({"name":herf,"href":"javascript:void(0)"}).css({"color":"#4c8fbd","cursor":"pointer"});
-	//parent.$('.Current_page').html("<a href='javascript:void(0)' name="+herf+" class='iframeurl'>" + cnames + "</a>");
-    parent.layer.close(index);
-});
-</script>
+</html>

@@ -96,12 +96,27 @@ public class CatalogService {
         itemMapper.insertInventoryRecord(item.getItemId(),quantity);
     }
 
-    public void updateItem(Item item){
-        itemMapper.updateItem(item);
+    public int updateItem(Item item){
+         return itemMapper.updateItem(item);
     }
 
-    public void deleteItem(String itemId){
-        itemMapper.deleteItem(itemId);
+    public int updateItemStatus(String itemId, String status){
+        if(itemId==null || itemId.isEmpty()){
+            return 0;
+        }
+        if(status==null || status.isEmpty()){
+            return 0;
+        }
+
+        return status.equals("P") || status.equals("S") ? itemMapper.updateItemStatus(itemId,status) : 0;
+    }
+
+    public int deleteItem(String itemId){
+        return itemId ==null || itemId.isEmpty() ? 0 : itemMapper.deleteItem(itemId);
+    }
+
+    public int deleteItems(List<String> idList){
+        return idList == null || idList.isEmpty() ? 0 : itemMapper.deleteItems(idList);
     }
 
     public boolean isItemInStock(String itemId) {

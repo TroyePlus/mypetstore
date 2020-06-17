@@ -131,9 +131,24 @@
         where itemid = #{itemId}
     </update>
 
+    <update id="updateItemStatus" parameterType="string">
+        update item
+        set status = #{status}
+        where itemid = #{itemId}
+    </update>
+
     <delete id="deleteItem" parameterType="string">
         delete a, b
         from item a left join inventory b on a.itemid = b.itemid
         where a.itemid = #{itemId}
+    </delete>
+
+    <delete id="deleteItems" parameterType="list">
+        delete a, b
+        from item a left join inventory b on a.itemid = b.itemid
+        where a.itemid in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
 </mapper>

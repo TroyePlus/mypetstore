@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -107,7 +108,23 @@ public class BackProductTest {
         itemMapper.updateItem(item);
     }
 
+    @Test
+    void test_updateStatus()
+    {
+        System.out.println(itemMapper.updateItemStatus("black","S"));
+    }
+
     @Test void testItem_delete(){
         Assert.isTrue(itemMapper.deleteItem("AAA-01")==2,"Item删除失败");
+    }
+
+    @Test
+    void testItem_delete_in_batches(){
+        List<String> idList = new ArrayList<>();
+        idList.add("bb");
+        idList.add("bbb");
+        idList.add("bbbb");
+
+        System.out.println(itemMapper.deleteItems(idList));
     }
 }

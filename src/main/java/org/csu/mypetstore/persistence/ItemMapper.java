@@ -31,5 +31,9 @@ public interface ItemMapper {
 
     int updateItem(Item item);
 
+    int updateItemStatus(@Param("itemId")String itemId,@Param("status")String status);
+
     int deleteItem(String itemId);
+
+    int deleteItems(List<String> itemId);
 }

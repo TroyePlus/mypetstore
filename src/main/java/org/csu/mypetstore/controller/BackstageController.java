@@ -187,4 +187,118 @@ public class BackstageController {
     }
 
 
+    @GetMapping("viewProductChart")
+    @ResponseBody
+    public List<Label> viewProductChart(HttpSession session){
+        Object object = session.getAttribute("productLabels");
+        if(object instanceof List){
+            return (List<Label>) object;
+        }
+
+        List<Label> labels = catalogService.getItemCountGroupByProductId();
+        session.setAttribute("productLabels", labels);
+        return labels;
+    }
+
+    @GetMapping("newProductForm")
+    public String newProductForm(){
+        return "backstage/Add_Brand";
+    }
+
+    @GetMapping("editProductForm")
+    public String editProductForm(String productId, Model model){
+        if(productId!=null) {
+            Product product = catalogService.getProduct(productId);
+            CatalogController.processProductDescription(product);
+            List<String> catIdList = catalogService.getCategoryId();
+            model.addAttribute("product",product);
+            model.addAttribute("catIdList",catIdList);
+        }
+        return "backstage/product-edit";
+    }
+
+    /*
+        pn-pageNumber
+        ps-pageSize
+     */
+    @GetMapping("products")
+    @ResponseBody
+    public PageInfo<Product> getProductWithName(@RequestParam(required = false, defaultValue ="1",value = "pn")Integer pn,
+                                                @RequestParam(required = false, defaultValue ="10",value = "ps")Integer ps,
+                                                @RequestParam("name")String name){
+        PageHelper.startPage(pn, ps);
+        //startPage后紧跟的这个查询就是分页查询
+        List<Product> products = catalogService.getProductWithName(name);
+
+        //处理Description
+        CatalogController.processProductDescription(products);
+
+        //使用PageInfo包装查询结果，只需要将pageInfo交给页面就可以
+        //pageINfo封装了分页的详细信息，也可以指定连续显示的页数
+        return new PageInfo<>(products, 5);
+    }
+
+    @PostMapping("editProduct")
+    public Map<String,Object> editProduct(Product product){
+        int status = catalogService.updateProduct(product);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("status",status);
+        return resultMap;
+    }
+
+    @PostMapping("products")
+    public Map<String,Object> addProduct(Product product){
+        int status = catalogService.insertProduct(product);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("status",status);
+        return resultMap;
+    }
+
+    @DeleteMapping("products")
+    @ResponseBody
+    public Map<String,Object> deleteProduct(String productId){
+        int status = catalogService.deleteProduct(productId);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("status",status);
+        return resultMap;
+    }
+
+    @GetMapping("items")
+    @ResponseBody
+    public Map<String,Object> getItems(@RequestParam(required = false, defaultValue ="1",value = "pn")int pn,
+                                       @RequestParam(required = false, defaultValue ="10",value = "ps")int ps,
+                                       @RequestParam(required = false, value="itemId")String itemId){
+        PageHelper.startPage(pn, ps);
+        List<Item> items = catalogService.getItemListWithId(itemId);
+
+        Map<String,Object> map = new HashMap<>();
+
+        int status;
+        PageInfo<Item> pageInfo;
+        if(items == null || items.isEmpty()){
+            status = 0;
+            pageInfo = null;
+        }
+        else{
+            status =1;
+            pageInfo = new PageInfo<>(items, 5);
+        }
+        map.put("status",status);
+        map.put("pageInfo",pageInfo);
+        return map;
+    }
+
+    @DeleteMapping("items")
+    @ResponseBody
+    public Map<String, Object> deleteItem(String itemId){
+        Map<String,Object> map = new HashMap<>();
+        int status = catalogService.deleteItem(itemId);
+        map.put("status",status);
+        return map;
+    }
+
+    @GetMapping("testForm")
+    public String testForm(){
+        return "backstage/test";
+    }
 }
