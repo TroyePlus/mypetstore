@@ -1,7 +1,9 @@
 package org.csu.mypetstore.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.csu.mypetstore.domain.*;
-import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.AdministratorService;
 import org.csu.mypetstore.service.CatalogService;
 import org.csu.mypetstore.service.OrderService;
@@ -183,9 +185,6 @@ public class BackstageController {
         product.setDescriptionImage(temp[1]);
         product.setDescriptionText(temp[2].substring(1));
     }
-
-
-
 
 
 }

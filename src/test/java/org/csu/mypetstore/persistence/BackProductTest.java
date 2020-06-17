@@ -79,6 +79,15 @@ public class BackProductTest {
         System.out.println(list);
     }
 
+    @Test
+    void testPro_getCatId(){
+        System.out.println(categoryMapper.getCategoryId());
+    }
+
+    @Test
+    void testItem_getWithIdLike(){
+        System.out.println(itemMapper.getItemListWithItemId(null));
+    }
 
     @Test
     public void testItem_insert(){

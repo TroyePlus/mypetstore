@@ -155,7 +155,7 @@ public class AccountController {
 
     @GetMapping("newAccountForm")
     public String newAccountForm(Model model){
-        model.addAttribute("newAccount",new Account());
+        model.addAttribute("account",new Account());
         model.addAttribute("LANGUAGE_LIST",LANGUAGE_LIST);
         model.addAttribute("CATEGORY_LIST",CATEGORY_LIST);
         return "account/NewAccountForm";

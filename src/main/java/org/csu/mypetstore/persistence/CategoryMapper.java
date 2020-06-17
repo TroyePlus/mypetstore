@@ -10,6 +10,8 @@ public interface CategoryMapper {
 
     List<Category> getCategoryList();
 
+    List<String> getCategoryId();
+
     Category getCategory(String categoryId);
 
     int insertCategory(Category category);

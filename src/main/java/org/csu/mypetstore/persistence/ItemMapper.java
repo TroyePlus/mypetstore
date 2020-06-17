@@ -15,6 +15,8 @@ public interface ItemMapper {
 
     List<Item> getItemListByProduct(String productId);
 
+    List<Item> getItemListWithItemId(String itemId);
+
     Item getItem(String itemId);
 
     int getStockQuantity(String itemId);

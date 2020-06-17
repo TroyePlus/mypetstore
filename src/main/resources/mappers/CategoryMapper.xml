@@ -21,6 +21,10 @@
 
     </select>
 
+    <select id="getCategoryId" resultType="string">
+        select catid from category
+    </select>
+
     <insert id="insertCategory" parameterType="Category">
         INSERT INTO CATEGORY
         (CATID, NAME, DESCN)

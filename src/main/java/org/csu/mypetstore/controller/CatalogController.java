@@ -76,12 +76,12 @@ public class CatalogController {
         }
     }
 
-    private static void processProductDescription(Product product){
+    public static void processProductDescription(Product product){
         String [] temp = product.getDescription().split("\"");
         product.setDescriptionImage(temp[1]);
         product.setDescriptionText(temp[2].substring(1));
     }
-    private static void processProductDescription(List<Product> productList){
+    public static void processProductDescription(List<Product> productList){
         for(Product product : productList) {
             processProductDescription(product);
         }

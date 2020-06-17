@@ -40,11 +40,16 @@
       descn as description,
       category as categoryId
     from product
-    where name like concat('%',#{name},'%')
+    <if test="name!=null">
+      where name like concat('%',#{name},'%')
+    </if>
   </select>
 
   <select id="getItemCountByProductId" resultType="Label">
-    select productid as label, count(itemid) as count from item group by productid
+    select p.name as label, count(itemid) as count
+    from item i inner join product p
+    on i.productid = p.productid
+    group by i.productid
   </select>
 
   <select id="getProductName" parameterType="String" resultType="String">

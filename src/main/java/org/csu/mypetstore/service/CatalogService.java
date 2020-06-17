@@ -32,6 +32,10 @@ public class CatalogService {
         return categoryMapper.getCategoryList();
     }
 
+    public List<String> getCategoryId(){
+        return categoryMapper.getCategoryId();
+    }
+
     public Category getCategory(String categoryId) {
         return categoryMapper.getCategory(categoryId);
     }
@@ -61,20 +65,25 @@ public class CatalogService {
         return productMapper.searchProductList("%" + keyword.toLowerCase() + "%");
     }
 
-    public void insertProduct(Product product){
-        productMapper.updateProduct(product);
+    public int insertProduct(Product product){
+        return product==null ? 0 : productMapper.insertProduct(product);
     }
 
-    public void updateProduct(Product product){
-        productMapper.updateProduct(product);
+    public int updateProduct(Product product){
+        return product==null ? 0 : productMapper.updateProduct(product);
     }
 
-    public void deleteProduct(String productId){
-        productMapper.deleteProduct(productId);
+    public int deleteProduct(String productId){
+        return productId==null||productId.isEmpty() ? 0 : productMapper.deleteProduct(productId);
     }
 
     public List<Item> getItemListByProduct(String productId) {
         return itemMapper.getItemListByProduct(productId);
+    }
+
+    public List<Item> getItemListWithId(String itemId){
+        String id = itemId==null || itemId.isEmpty() ? null : itemId;
+        return itemMapper.getItemListWithItemId(id);
     }
 
     public Item getItem(String itemId) {
@@ -109,7 +118,8 @@ public class CatalogService {
     }
 
     public List<Product> getProductWithName(String name){
-        return productMapper.getProductListWithName(name);
+        String searchName = null==name || name.isEmpty() || name.trim().isEmpty() ? null : name.trim();
+        return productMapper.getProductListWithName(searchName);
     }
 
     public List<Label> getItemCountGroupByProductId() {
