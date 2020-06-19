@@ -1,5 +1,8 @@
 package org.csu.mypetstore.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.csu.mypetstore.domain.Account;
 import org.csu.mypetstore.domain.Administrator;
 import org.csu.mypetstore.persistence.AdministratorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AdministratorService {
@@ -44,6 +49,22 @@ public class AdministratorService {
         if (administrator.getPassword() != null && administrator.getPassword().length() > 0) {
             administratorMapper.updateSignon(administrator);
         }
+    }
+
+    public PageInfo getList(Integer page, Integer limit, Administrator administrator){
+        PageHelper.startPage(page, limit);
+        List<Administrator> list = administratorMapper.getList(administrator);
+        PageInfo<Administrator> pageInfo = new PageInfo<>(list);
+        return pageInfo;
+    }
+
+    public void updateAdministratorStatusByUserName(Administrator administrator){
+        administratorMapper.updateAdministrator(administrator);
+    }
+
+    @Transactional
+    public void deleteAdministrator(Administrator administrator){
+        administratorMapper.deleteAdministratorByUserName(administrator);
     }
 
 }
