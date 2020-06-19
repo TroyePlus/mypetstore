@@ -301,4 +301,9 @@ public class BackstageController {
     public String testForm(){
         return "backstage/test";
     }
+
+    @GetMapping("/help")
+    public String help() {
+        return "common/help";
+    }
 }
