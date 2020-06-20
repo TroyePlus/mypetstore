@@ -53,6 +53,7 @@
     select p.name as label, count(itemid) as count
     from item i inner join product p
     on i.productid = p.productid
+    where i.status = "P"
     group by i.productid
   </select>
 

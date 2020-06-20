@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
@@ -285,14 +286,15 @@ public class BackstageController {
 
     @GetMapping("viewProductChart")
     @ResponseBody
-    public List<Label> viewProductChart(HttpSession session){
-        Object object = session.getAttribute("productLabels");
-        if(object instanceof List){
-            return (List<Label>) object;
-        }
+    public List<Label> viewProductChart(){
+        //HttpSession session
+//        Object object = session.getAttribute("productLabels");
+//        if(object instanceof List){
+//            return (List<Label>) object;
+//        }
 
         List<Label> labels = catalogService.getItemCountGroupByProductId();
-        session.setAttribute("productLabels", labels);
+//        session.setAttribute("productLabels", labels);
         return labels;
     }
 
@@ -301,6 +303,10 @@ public class BackstageController {
     public List<String> getAllCategoryId(){
         return catalogService.getAllCategoryId();
     }
+
+//    @GetMapping("categories/idTree")
+//    @ResponseBody
+//    public List<String,>
 
     /*
         pn-pageNumber
@@ -326,7 +332,8 @@ public class BackstageController {
 
     @PostMapping("products")
     @ResponseBody
-    public Map<String,Object> addProduct(Product product){
+    public Map<String,Object> addProduct(Product product,
+                                         @RequestParam(required = false)MultipartFile file){
         int status = catalogService.insertProduct(product);
         Map<String,Object> resultMap = new HashMap<>();
         resultMap.put("status",status);

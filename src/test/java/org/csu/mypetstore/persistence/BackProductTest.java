@@ -5,6 +5,7 @@ import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Label;
 import org.csu.mypetstore.domain.Product;
+import org.csu.mypetstore.service.CatalogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,13 @@ public class BackProductTest {
     private ProductMapper productMapper;
     @Autowired
     private ItemMapper itemMapper;
+    @Autowired
+    private CatalogService catalogService;
+
+    @Test
+    void test_getItemListWithStatus(){
+        System.out.println(catalogService.getItemListByProduct("AV-CB-01"));
+    }
 
     @Test
     public void testCat_insert(){
@@ -45,6 +53,18 @@ public class BackProductTest {
     @Test
     public void testCat_delete(){
         Assert.isTrue(categoryMapper.deleteCategory("TEST_CAT")==1,"Category删除失败");
+    }
+
+    @Test
+    public void testCat_changeDescn() {
+        List<Category> categories = categoryMapper.getCategoryList();
+        String image;
+
+        for(Category category : categories){
+            String [] temp = category.getDescription().split("\"");
+            image = temp[1];
+            categoryMapper.updateDescn(category.getCategoryId(),image);
+        }
     }
 
     @Test
