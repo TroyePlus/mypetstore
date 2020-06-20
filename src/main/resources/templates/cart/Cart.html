@@ -79,6 +79,10 @@
                 <a class="Button" href="/order/newOrder">
                     Proceed to Checkout
                 </a>
+
+                <div th:if="${stockMessage!=null}">
+                    <p th:text="${stockMessage}"></p>
+                </div>
             </th:block>
         </div>
         <div id="MyList" th:if="(${session.account} != null) and (${session.authenticated})">

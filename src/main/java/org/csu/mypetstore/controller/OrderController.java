@@ -89,10 +89,13 @@ public class OrderController {
                  ) {
                 int stockQuantity = catalogService.getStockQuantity(l.getItemId());
                 if(stockQuantity < l.getQuantity()){
+
+                    model.addAttribute("stockMessage","库存不够！");
                     view = "cart/Cart";
                     return view;
                 }
             }
+            model.addAttribute("stockMessage",null);
 
             view = "order/NewOrderForm";
         }else{
@@ -121,9 +124,14 @@ public class OrderController {
     }
 
     @PostMapping("shippingAddress")
-    public String updateAddress(@RequestParam Map<String,Object> params, Model model){
+    public String updateAddress(@RequestParam Map<String,Object> params, Model model ,HttpSession session){
         Order order = (Order) model.getAttribute("order");
-        if(order!=null) {
+        Account account = (Account) session.getAttribute("account");
+        Cart cart = (Cart)model.getAttribute("cart");
+
+        order.initOrder(account,cart);
+
+        if(true) {
             order.setShipToFirstName((String) params.get("shipToFirstName"));
             order.setShipToLastName((String) params.get("shipToLastName"));
             order.setShipAddress1((String) params.get("shipAddress1"));
@@ -133,6 +141,8 @@ public class OrderController {
             order.setShipZip((String) params.get("shipZip"));
             order.setShipCountry((String) params.get("shipCountry"));
         }
+
+        model.addAttribute("order",order);
         return "order/ConfirmOrder";
     }
 
