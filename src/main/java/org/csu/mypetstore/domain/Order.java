@@ -25,7 +25,7 @@ public class Order {
     private String billZip;
     private String billCountry;
     private String courier;
-    private BigDecimal totalPrice;
+    private BigDecimal totalPrice = new BigDecimal(0);
     private String billToFirstName;
     private String billToLastName;
     private String shipToFirstName;
@@ -35,7 +35,7 @@ public class Order {
     private String cardType;
     private String locale;
     // completed pay ship receipt failure
-    private String status;
+    private String status = "待发货";
     private List<LineItem> lineItems = new ArrayList<LineItem>();
 
     public void initOrder(Account account,Cart cart){
@@ -62,7 +62,10 @@ public class Order {
             lineItem.setQuantity(c.getQuantity());
             lineItem.setItem(c.getItem());
             lineItem.setTotal(c.getTotal());
-            lineItem.setUnitPrice(c.getItem().getUnitCost());
+
+            totalPrice = (c.getTotal().add(totalPrice));
+
+            lineItem.setUnitPrice(c.getItem().getListPrice());
 
             this.lineItems.add(lineItem);
         }

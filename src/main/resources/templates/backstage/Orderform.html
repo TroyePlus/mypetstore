@@ -55,11 +55,11 @@
          <div class="widget-body">         
          <ul class="b_P_Sort_list">
              <li id="allOrders"><i class="orange  fa fa-reorder"></i><a href="#">全部订单</a></li>
-             <li><i class="fa fa-sticky-note pink "></i> <a href="#">BIRDS(235)</a></li>
-             <li><i class="fa fa-sticky-note pink "></i> <a href="#">CATS(2215)</a> </li>
-             <li><i class="fa fa-sticky-note pink "></i> <a href="#">DOGS(3456)</a></li>
-             <li><i class="fa fa-sticky-note pink "></i> <a href="#">FISH</a></li>
-             <li><i class="fa fa-sticky-note pink "></i> <a href="#">REPTILES(1332)</a></li>
+             <li id="birdsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">BIRDS(235)</a></li>
+             <li id="catsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">CATS(2215)</a> </li>
+             <li id="dogsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">DOGS(3456)</a></li>
+             <li id="fishIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">FISH</a></li>
+             <li id="reptilesIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">REPTILES(1332)</a></li>
 
             </ul>
     
@@ -146,6 +146,7 @@
 
     //后台商品种类数量数据
  $(function() {
+     console.log("yyy");
 
      window.onload = function(){
          $.ajax(
@@ -158,17 +159,18 @@
                      console.log(data['BIRDS']);
                      var totalNumber =  data['BIRDS'] + data['CATS'] + data['FISH'] + data['DOGS'] + data['REPTILES'];
 
-                     $("#BIRDS2").attr("data-percent",new Number(data['BIRDS'] / totalNumber).toFixed(2) * 100);
-                     $("#CATS2").attr("data-percent", new Number(data['CATS'] / totalNumber).toFixed(2) * 100);
-                     $("#FISH2").attr("data-percent",new Number(data['FISH'] / totalNumber).toFixed(2) * 100);
-                     $("#DOGS2").attr("data-percent",new Number(data['DOGS'] / totalNumber).toFixed(2) * 100);
-                     $("#REPTILES2").attr("data-percent",new Number(data['REPTILES'] / totalNumber).toFixed(2) * 100);
+                     $("#BIRDS2").attr("data-percent",Math.round(data['BIRDS'] / totalNumber * 100));
+                     $("#CATS2").attr("data-percent", Math.round(data['CATS'] / totalNumber * 100));
+                     $("#FISH2").attr("data-percent",Math.round(data['FISH'] / totalNumber * 100));
+                     $("#DOGS2").attr("data-percent",Math.round(data['DOGS'] / totalNumber * 100));
+                     $("#REPTILES2").attr("data-percent",Math.round(data['REPTILES'] / totalNumber * 100));
 
-                     $("#BIRDS").html(new Number(data['BIRDS'] / totalNumber).toFixed(2) * 100);
-                     $("#FISH").html(new Number(data['FISH'] / totalNumber).toFixed(2) * 100);
-                     $("#CATS").html(new Number(data['CATS'] / totalNumber).toFixed(2) * 100);
-                     $("#DOGS").html(new Number(data['DOGS'] / totalNumber).toFixed(2) * 100);
-                     $("#REPTILES").html(new Number(data['REPTILES'] / totalNumber).toFixed(2) * 100);
+                     $("#BIRDS").html(Math.round(data['BIRDS'] / totalNumber * 100));
+                     // $("#FISH").html(new Number(data['FISH'] / totalNumber).toFixed(2) * 100);
+                     $("#FISH").html(Math.round(data['FISH'] / totalNumber * 100));
+                     $("#CATS").html(Math.round(data['CATS'] / totalNumber * 100));
+                     $("#DOGS").html(Math.round(data['DOGS'] / totalNumber * 100));
+                     $("#REPTILES").html(Math.round(data['REPTILES'] / totalNumber * 100));
 
                      $('.easy-pie-chart.percentage').each(function(){
                      	$(this).easyPieChart({
@@ -195,6 +197,47 @@
          );
      }
 
+
+     //按类别展示功能
+     $("li").on("click",function(){
+         console.log("hhh");
+         var id = $(this).attr("id");
+         console.log(id);
+
+         var obj;
+         switch (id) {
+             case "birdsIdList":obj = [[${birdsIdList}]];break;
+             case "catsIdList":obj = [[${catsIdList}]];break;
+             case "dogsIdList":obj = [[${dogsIdList}]];break;
+             case "fishIdList":obj = [[${fishIdList}]];break;
+             case "reptilesIdList":obj = [[${reptilesIdList}]];break;
+
+
+         }
+
+         console.log(obj.length);
+         if(obj.length == 0){
+             layer.msg("此处暂时空缺哦亲",{icon: 5,time:1000});
+         }
+
+         var all = [[${orderIdList}]];
+         console.log(all);
+
+
+         $.each(all,function (n,value) {
+             $("#"+value).hide();
+         })
+
+         $.each(obj,function(n,value){
+             console.log(value);
+             $("#"+value).show();
+
+         })
+
+
+
+     })
+
      //查询功能
      $("#searchButton").on("click",function () {
          console.log("click");
@@ -216,13 +259,14 @@
          })
 
          if(flag == 0){
-             layer.msg("没有查询的订单号哦亲")
+             layer.msg("没有查询的订单号哦亲",{icon: 6,time:1000});
          }
 
      })
 
      $("#allOrders").on("click",function () {
         var obj = [[${orderIdList}]];
+        console.log(obj);
 
         console.log("right");
         $.each(obj,function (n,value) {
