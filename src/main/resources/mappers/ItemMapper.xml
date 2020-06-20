@@ -96,7 +96,7 @@
     </select>
 
     <update id="updateStockQuantity" >
-        update item set stockquantity = stockquantity - #{decreaseQuantity} where itemid = #{itemId}
+        update item set stockquantity = #{stockQuantity} where itemid = #{itemId}
     </update>
 
     <select id="getCategoryByItemId" parameterType="String" resultType="String">

@@ -23,7 +23,7 @@ public interface ItemMapper {
 
     int getStockQuantity(String itemId);
 
-    void updateStockQuantity(String itemId,int decreaseQuantity);
+    void updateStockQuantity(String itemId,int stockQuantity);
 
     String getCategoryByItemId(String itemId);
 

@@ -66,7 +66,8 @@
                     <b th:text="${lineItem.item.product.categoryId}"></b>
                     <br>
                     数量：<input style="width:30px;height:20px;"  th:value="${lineItem.quantity}" th:name="${lineItem.lineNumber}"></input> <button type="button" class="btn_search" th:name="${lineItem.lineNumber}">修改</button>
-                    <p >价格：<b class="price" th:text="${lineItem.unitPrice}"><i>￥</i></b></p>
+                    <p>库存：<b th:text="${lineItem.item.stockQuantity}" th:name="${lineItem.lineNumber}" ></b></p>
+                        <p >价格：<b class="price" th:text="${lineItem.unitPrice}"><i>￥</i></b></p>
                     <p>状态：
                         <i class="label label-success radius" th:if="${lineItem.item.inStock}">有货</i>
                         <i class="label label-success radius" th:if="${!lineItem.item.inStock}">缺货</i>
@@ -86,26 +87,27 @@
         </div>
         <div class="col-xs-3">  
          <label class="label_name" for="form-field-2"> 支付状态： </label>
-         <div class="o_content">等待付款</div>
+         <div class="o_content">已付款</div>
         </div>
-        <div class="col-xs-3">  
-         <label class="label_name" for="form-field-2"> 订单生成日期： </label>
-         <div class="o_content">2016-7-5</div>
+        <div class="col-xs-3">
+         <label class="label_name" for="form-field-2" >订单日期： </label>
+         <div class="o_content" th:text="${#dates.format(order.orderDate,'yyyy-MM-dd')}"></div>
         </div>
-         <div class="col-xs-3">  
+
+         <div class="col-xs-3" th:if="${delivery != null}">
          <label class="label_name" for="form-field-2"> 快递名称： </label>
-         <div class="o_content">中通快递</div>
+         <div class="o_content" th:text="${delivery.courierName}"></div>
         </div>
-         <div class="col-xs-3">  
+         <div class="col-xs-3" th:if="${delivery != null}">
          <label class="label_name" for="form-field-2"> 发货日期： </label>
-         <div class="o_content">2016-7-19</div>
+             <div class="o_content" th:text="${#dates.format(delivery.deliveryTime,'yyyy-MM-dd')}"></div>
         </div>
         </div>
       <div class="Total_m_style"><span class="Total">总数：<b id="totalCount"></b></span><span class="Total_price">总价：<b th:text="${order.totalPrice}" id="totalPrice"></b>元</span></div>
     </div>
     
     <!--物流信息-->
-    <div class="Logistics_style clearfix">
+    <div class="Logistics_style clearfix" th:if="${delivery != null}">
      <div class="title_name">物流信息</div>
       <!--<div class="prompt"><img src="images/meiyou.png" /><p>暂无物流信息！</p></div>-->
        <div data-mohe-type="kuaidi_new" class="g-mohe " id="mohe-kuaidi_new">
@@ -115,31 +117,31 @@
                     <div class="mh-list">
                         <ul>
                             <li class="first">
-                                <p>2015-04-28 11:23:28</p>
+                                <p>2020-06-20 11:23:28</p>
                                 <p>妥投投递并签收，签收人：他人收 他人收</p>
                                 <span class="before"></span><span class="after"></span><i class="mh-icon mh-icon-new"></i></li>
                             <li>
-                                <p>2015-04-28 07:38:44</p>
+                                <p>2020-06-20 07:38:44</p>
                                 <p>深圳市南油速递营销部安排投递（投递员姓名：蔡远发<a href="tel:18718860573">18718860573</a>;联系电话：）</p>
                                 <span class="before"></span><span class="after"></span></li>
                             <li>
-                                <p>2015-04-28 05:08:00</p>
+                                <p>2020-06-20 05:08:00</p>
                                 <p>到达广东省邮政速递物流有限公司深圳航空邮件处理中心处理中心（经转）</p>
                                 <span class="before"></span><span class="after"></span></li>
                             <li>
-                                <p>2015-04-28 00:00:00</p>
+                                <p>2020-06-20 00:00:00</p>
                                 <p>离开中山市 发往深圳市（经转）</p>
                                 <span class="before"></span><span class="after"></span></li>
                             <li>
-                                <p>2015-04-27 15:00:00</p>
+                                <p>2020-06-19 15:00:00</p>
                                 <p>到达广东省邮政速递物流有限公司中山三角邮件处理中心处理中心（经转）</p>
                                 <span class="before"></span><span class="after"></span></li>
                             <li>
-                                <p>2015-04-27 08:46:00</p>
+                                <p>2020-06-19 08:46:00</p>
                                 <p>离开泉州市 发往中山市</p>
                                 <span class="before"></span><span class="after"></span></li>
                             <li>
-                                <p>2015-04-26 17:12:00</p>
+                                <p>2020-06-18 17:12:00</p>
                                 <p>泉州市速递物流分公司南区电子商务业务部已收件，（揽投员姓名：王晨光;联系电话：<a href="tel:13774826403">13774826403</a>）</p>
                                 <span class="before"></span><span class="after"></span></li>
                         </ul>
@@ -181,30 +183,46 @@
             console.log("---attention-------");
             console.log(lineNumber);
             var obj = $("input[name="+lineNumber+"]");
-            count = obj.val();
+            count = parseInt(obj.val());
             console.log(count);
 
-            $.ajax({
-                url:"/order/updateLineItemCount",
-                type:"POST",
-                data:{"lineNumber":lineNumber,"count":count,
-                    "orderId":[[${order.orderId}]]},
-                dataType:"JSON",
-                success:function (data) {
-                    console.log(data["totalCount"]);
-                    console.log(data["totalPrice"]);
-                    $("#totalCount").text(data["totalCount"]);
-                    $("#totalPrice").text(data["totalPrice"]);
+            var stockB =  $("b[name="+lineNumber+"]");
+            console.log(stockB);
+            var stockQuantity = parseInt(stockB.text());
+            console.log(stockQuantity);
 
-                },
-                error:function (data) {
-                    console.log(data["totalCount"]);
-                    console.log(data["totalPrice"]);
-                    $("#totalCount").text(data["totalCount"]);
-                    $("#totalPrice").text(data["totalPrice"]);
-                }
+            //比较库存
+            if(count > stockQuantity){
+                layer.msg("库存不够哦！");
+            }
+            else{
+                $.ajax({
+                    url:"/order/updateLineItemCount?time="+new Date().getTime(),
+                    type:"POST",
+                    data:{"lineNumber":lineNumber,"count":count,
+                        "orderId":[[${order.orderId}]]},
+                    dataType:"JSON",
+                    success:function (data) {
+                        console.log(data["totalCount"]);
+                        console.log(data["totalPrice"]);
+                        $("#totalCount").text(data["totalCount"]);
+                        $("#totalPrice").text(data["totalPrice"]);
+                        stockB.text(data["stockQuantity"]);
 
-            })
+                    },
+                    error:function (data) {
+                        console.log(data["totalCount"]);
+                        console.log(data["totalPrice"]);
+                        $("#totalCount").text(data["totalCount"]);
+                        $("#totalPrice").text(data["totalPrice"]);
+                        stockB.text(data["stockQuantity"]);
+                    }
+
+                })
+            }
+
+
+
 
         })
 

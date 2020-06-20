@@ -55,11 +55,11 @@
          <div class="widget-body">         
          <ul class="b_P_Sort_list">
              <li id="allOrders"><i class="orange  fa fa-reorder"></i><a href="#">全部订单</a></li>
-             <li id="birdsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">BIRDS(235)</a></li>
-             <li id="catsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">CATS(2215)</a> </li>
-             <li id="dogsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">DOGS(3456)</a></li>
+             <li id="birdsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">BIRDS</a></li>
+             <li id="catsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">CATS</a> </li>
+             <li id="dogsIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">DOGS</a></li>
              <li id="fishIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">FISH</a></li>
-             <li id="reptilesIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">REPTILES(1332)</a></li>
+             <li id="reptilesIdList"><i class="fa fa-sticky-note pink "></i> <a href="#">REPTILES</a></li>
 
             </ul>
     
@@ -73,7 +73,7 @@
      
       <ul class="search_content clearfix">
        <li><label class="l_f">订单编号</label><input name="" type="text" class="text_add" placeholder="订单编号" style=" width:250px" id="toSearchId"></li>
-       <li><label class="l_f">时间</label><input class="inline laydate-icon" id="start" style=" margin-left:10px;"></li>
+       <li style="display: none"><label class="l_f">时间</label><input class="inline laydate-icon" id="start" style=" margin-left:10px;"></li>
        <li style="width:100px;"><button type="button" class="btn_search" id="searchButton"><i class="fa fa-search" ></i>查询</button></li>
       </ul>
     </div>
@@ -146,7 +146,6 @@
 
     //后台商品种类数量数据
  $(function() {
-     console.log("yyy");
 
      window.onload = function(){
          $.ajax(
@@ -155,8 +154,6 @@
                  type: "GET",
                  dataType: "json",
                  success: function (data) {
-                     console.log("success");
-                     console.log(data['BIRDS']);
                      var totalNumber =  data['BIRDS'] + data['CATS'] + data['FISH'] + data['DOGS'] + data['REPTILES'];
 
                      $("#BIRDS2").attr("data-percent",Math.round(data['BIRDS'] / totalNumber * 100));
@@ -184,7 +181,6 @@
                      	}).css('color', $(this).data('color'));
                      });
 
-                     console.log(data['allOrders']);
 
                     //$("#1001").hide();
 
@@ -200,12 +196,11 @@
 
      //按类别展示功能
      $("li").on("click",function(){
-         console.log("hhh");
          var id = $(this).attr("id");
-         console.log(id);
 
          var obj;
          switch (id) {
+             case "allOrders":obj = [[${orderIdList}]];break;
              case "birdsIdList":obj = [[${birdsIdList}]];break;
              case "catsIdList":obj = [[${catsIdList}]];break;
              case "dogsIdList":obj = [[${dogsIdList}]];break;
@@ -215,13 +210,11 @@
 
          }
 
-         console.log(obj.length);
          if(obj.length == 0){
              layer.msg("此处暂时空缺哦亲",{icon: 5,time:1000});
          }
 
          var all = [[${orderIdList}]];
-         console.log(all);
 
 
          $.each(all,function (n,value) {
@@ -229,7 +222,6 @@
          })
 
          $.each(obj,function(n,value){
-             console.log(value);
              $("#"+value).show();
 
          })
@@ -240,12 +232,10 @@
 
      //查询功能
      $("#searchButton").on("click",function () {
-         console.log("click");
          var inputId = $("#toSearchId").val();
          console.log(inputId);
 
          var obj = [[${orderIdList}]];
-         console.log(obj);
 
          //判断是否能查询得到
          var flag =0;
@@ -266,7 +256,6 @@
 
      $("#allOrders").on("click",function () {
         var obj = [[${orderIdList}]];
-        console.log(obj);
 
         console.log("right");
         $.each(obj,function (n,value) {
@@ -362,12 +351,18 @@ function Delivery_stop(obj,id){
 
 			console.log($(obj).parents("tr").attr("id"));
 
+            var date = new Date();
+            console.log(date);
+
+            var courierName = $("#form-field-select-1").find("option:selected").text();
+            console.log(courierName);
+
 			//更新后台数据库
             $.ajax({
-                url:"/order/updateOrderStatus",
+                url:"/order/delivery",
                 type:"POST",
                 data:{"orderId":$(obj).parents("tr").attr("id"),
-                        "status":"已发货"}
+                        "status":"已发货","deliveryTime":date,"courierName":courierName}
             })
 
 		  }

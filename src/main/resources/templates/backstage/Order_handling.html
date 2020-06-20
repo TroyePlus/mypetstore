@@ -34,11 +34,11 @@
          <div class="side_list"><div class="widget-header header-color-green2"><h4 class="lighter smaller">订单操作</h4></div>
          <div class="widget-body">
           <ul class="b_P_Sort_list">
-             <li id="allOrders"><i class="orange  fa fa-reorder"></i><a href="#">全部订单(235)</a></li>
-             <li id="completedOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">已完成(235)</a></li>
-             <li id="topayOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待付款(15)</a> </li>
-             <li id="tobedeliveredOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待发货(56)</a></li>
-             <li id="tobereceivedOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待收货(32)</a></li>
+             <li id="allOrders"><i class="orange  fa fa-reorder"></i><a href="#">全部订单</a></li>
+             <li id="completedOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">已完成</a></li>
+             <li id="topayOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待付款</a> </li>
+             <li id="tobedeliveredOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待发货</a></li>
+             <li id="tobereceivedOrder"><i class="fa fa-sticky-note pink "></i> <a href="#">待收货</a></li>
             </ul>
         </div>
        </div>
@@ -49,7 +49,7 @@
      
       <ul class="search_content clearfix">
        <li><label class="l_f">订单编号</label><input name="" type="text"  class="text_add" placeholder="输入订单编号"  style=" width:250px" id="toSearchId"/></li>
-       <li><label class="l_f">交易时间</label><input class="inline laydate-icon" id="start" style=" margin-left:10px;"></li>
+       <li style="display: none"><label class="l_f">交易时间</label><input class="inline laydate-icon" id="start" style=" margin-left:10px;"></li>
        <li style="width:90px;"><button type="button" class="btn_search" id="searchButton"><i class="fa fa-search"></i>查询</button></li>
       </ul>
     </div>
@@ -120,23 +120,19 @@
 </html>
 <script>
 $(function() {
-    console.log("yyy");
 
     //查询功能
     $("#searchButton").on("click",function () {
-        console.log("click");
         var inputId = $("#toSearchId").val();
-        console.log(inputId);
+
 
         var obj = [[${orderIdList}]];
-        console.log(obj);
 
         //判断是否能查询得到
         var flag =0;
         $.each(obj,function (n,value) {
             $("#"+value).hide();
             if(value == inputId){
-                console.log(value);
                 flag =1;
                 $("#"+value).show();
             }
@@ -151,7 +147,6 @@ $(function() {
     $("#allOrders").on("click",function () {
         var obj = [[${orderIdList}]];
 
-        console.log("right");
         $.each(obj,function (n,value) {
             $("#"+value).show();
         })
@@ -159,9 +154,7 @@ $(function() {
 
     //按订单状态显示列表
     $("li").on("click",function(){
-        console.log("hhh");
         var id = $(this).attr("id");
-        console.log(id);
 
         var obj;
         switch (id) {
@@ -173,13 +166,11 @@ $(function() {
 
         }
 
-        console.log(obj.length);
         if(obj.length == 0){
             layer.msg("此处暂时空缺哦亲",{icon: 5,time:1000});
         }
 
         var all = [[${orderIdList}]];
-        console.log(all);
 
 
         $.each(all,function (n,value) {
@@ -187,7 +178,6 @@ $(function() {
         })
 
         $.each(obj,function(n,value){
-            console.log(value);
             $("#"+value).show();
 
         })
@@ -250,13 +240,18 @@ function Delivery_stop(obj,id){
 			});  
 			layer.close(index);
 
+			var date = new Date();
+			console.log(date);
+
+			var courierName = $("#form-field-select-1").find("option:selected").text();
+			console.log(courierName);
 
             //更新后台数据库
             $.ajax({
-                url:"/order/updateOrderStatus",
+                url:"/order/delivery",
                 type:"POST",
                 data:{"orderId":$(obj).parents("tr").attr("id"),
-                    "status":"已发货"}
+                    "status":"已发货","deliveryTime":date,"courierName":courierName}
             })
 		  }
 

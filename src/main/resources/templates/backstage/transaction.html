@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -22,7 +22,7 @@
 		<script src="../assets/js/respond.min.js"></script>
 		<![endif]-->
         		<!--[if !IE]> -->
-		<script src="../js/jquery-1.9.1.min.js" type="text/javascript"></script>
+		<script src="../js/jquery-3.4.1.min.js" type="text/javascript"></script>
 		<!-- <![endif]-->
         <script src="../assets/dist/echarts.js"></script>
         <script src="../assets/js/bootstrap.min.js"></script>
@@ -62,9 +62,9 @@
 </div>
 </body>
 </html>
-<script type="text/javascript">
+<script th:inline="javascript">
      $(document).ready(function(){
-		 
+
 		  $(".t_Record").width($(window).width()-60);
 		  //当文档窗口发生改变时 触发  
     $(window).resize(function(){
@@ -87,7 +87,25 @@
             ],
             function (ec,theme) {
                 var myChart = ec.init(document.getElementById('main'),theme);
-               option = {
+                let allMap = [[${allMap}]];
+                let c1 = allMap['1'];
+                let c2 = allMap['2'];
+                let c3 = allMap['3'];
+                let c4 = allMap['4'];
+                let c5 = allMap['5'];
+                let c6 = allMap['6'];
+
+                let tobedeliveredMap = [[${tobedeliveredMap}]];
+                let tbd1 = tobedeliveredMap['1'];
+                let tbd2 = tobedeliveredMap['2'];
+                let tbd3 = tobedeliveredMap['3'];
+                let tbd4 = tobedeliveredMap['4'];
+                let tbd5 = tobedeliveredMap['5'];
+                let tbd6 = tobedeliveredMap['6'];
+                let tbdMax = Math.max(tbd1,tbd2,tbd3,tbd4,tbd5,tbd6);
+
+
+                option = {
     title : {
         text: '月购买订单交易记录',
         subtext: '实时获取用户订单购买记录'
@@ -96,7 +114,7 @@
         trigger: 'axis'
     },
     legend: {
-        data:['所有订单','待付款','已付款','代发货']
+        data:['所有订单','待发货']
     },
     toolbox: {
         show : true,
@@ -112,7 +130,7 @@
     xAxis : [
         {
             type : 'category',
-            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+            data : ['1月','2月','3月','4月','5月','6月']
         }
     ],
     yAxis : [
@@ -124,51 +142,27 @@
         {
             name:'所有订单',
             type:'bar',
-            data:[120, 49, 70, 232, 256, 767, 1356, 1622, 326, 200,164, 133],
+            data:[c1, c2, c3, c4, c5, c6],
             markPoint : {
                 data : [
                     {type : 'max', name: '最大值'},
                     {type : 'min', name: '最小值'}
                 ]
             }           
-        },
-        {
-            name:'待付款',
-            type:'bar',
-            data:[26, 59, 30, 84, 27, 77, 176, 1182, 487, 188, 60, 23],
-            markPoint : {
-                data : [
-                    {name : '年最高', value : 1182, xAxis: 7, yAxis: 1182, symbolSize:18},
-                    {name : '年最低', value : 23, xAxis: 11, yAxis: 3}
-                ]
-            },
-           
-			
         }
 		, {
-            name:'已付款',
+            name:'待发货',
             type:'bar',
-            data:[26, 59, 60, 264, 287, 77, 176, 122, 247, 148, 60, 23],
+            data:[tbd1, tbd2, tbd3, tbd4, tbd5, tbd6],
             markPoint : {
                 data : [
-                    {name : '年最高', value : 172, xAxis: 7, yAxis: 172, symbolSize:18},
-                    {name : '年最低', value : 23, xAxis: 11, yAxis: 3}
+                    {type:'max' , name:'年最高'} ,
+                    {type:'min' , name:'年最低'}
                 ]
-            },
+            }
            
 		}
-		, {
-            name:'代发货',
-            type:'bar',
-            data:[26, 59, 80, 24, 87, 70, 175, 1072, 48, 18, 69, 63],
-            markPoint : {
-                data : [
-                    {name : '年最高', value : 1072, xAxis: 7, yAxis: 1072, symbolSize:18},
-                    {name : '年最低', value : 22, xAxis: 11, yAxis: 3}
-                ]
-            },
-           
-		}
+
     ]
 };
                     

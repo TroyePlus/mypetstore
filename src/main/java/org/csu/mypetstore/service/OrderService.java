@@ -1,9 +1,6 @@
 package org.csu.mypetstore.service;
 
-import org.csu.mypetstore.domain.Item;
-import org.csu.mypetstore.domain.LineItem;
-import org.csu.mypetstore.domain.Order;
-import org.csu.mypetstore.domain.Sequence;
+import org.csu.mypetstore.domain.*;
 import org.csu.mypetstore.persistence.ItemMapper;
 import org.csu.mypetstore.persistence.LineItemMapper;
 import org.csu.mypetstore.persistence.OrderMapper;
@@ -63,6 +60,7 @@ public class OrderService {
             Item item = itemMapper.getItem(lineItem.getItemId());
             item.setQuantity(itemMapper.getInventoryQuantity(lineItem.getItemId()));
             item.setInStock(item.getQuantity()>lineItem.getQuantity()?true:false);
+            item.setStockQuantity(itemMapper.getStockQuantity(lineItem.getItemId()));
             lineItem.setItem(item);
         }
 
@@ -107,6 +105,15 @@ public class OrderService {
             int orderid = o.getOrderId();
             List<LineItem > lineItemList = orderMapper.getLineItemsByOrder(orderid);
             o.setLineItems(lineItemList);
+
+            for (int i = 0; i < lineItemList.size(); i++) {
+                LineItem lineItem = (LineItem) lineItemList.get(i);
+                Item item = itemMapper.getItem(lineItem.getItemId());
+                item.setQuantity(itemMapper.getInventoryQuantity(lineItem.getItemId()));
+                item.setInStock(item.getQuantity()>lineItem.getQuantity()?true:false);
+                item.setStockQuantity(itemMapper.getStockQuantity(lineItem.getItemId()));
+                lineItem.setItem(item);
+            }
         }
 
         return allOrders;
@@ -127,6 +134,9 @@ public class OrderService {
 
     public void updateTotalPrice(int orderId,int totalPrice){orderMapper.updateTotalPrice(orderId,totalPrice);}
 
+    public void insertDelivery(Delivery delivery){orderMapper.insertDelivery(delivery);}
+
+    public Delivery getDeliveryByOrderId(int orderId) {return orderMapper.getDeliveryByOrderId(orderId);}
 
 
 

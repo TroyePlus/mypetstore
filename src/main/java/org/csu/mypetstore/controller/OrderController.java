@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RequestMapping("/order/")
@@ -43,7 +40,7 @@ public class OrderController {
             for (LineItem l:lineItems) {
                 int stockQuantity = catalogService.getStockQuantity(l.getItemId());
                 if(stockQuantity >= l.getQuantity()){
-                    catalogService.updateStockQuantity(l.getItemId(),l.getQuantity());
+                    catalogService.updateStockQuantity(l.getItemId(),stockQuantity-l.getQuantity());
                 }
                 else{
 
@@ -151,19 +148,24 @@ public class OrderController {
         orderService.deleteOrder(orderId);
     }
 
-    @PostMapping("updateOrderStatus")
-    public void updateOrderStatus(@RequestParam int orderId,String status){
+    @PostMapping("delivery")
+    public void updateOrderStatus(@RequestParam int orderId,String status,Date deliveryTime ,String courierName){
         orderService.updateOrderStatus(orderId,status);
+
+        Delivery delivery = new Delivery(orderId,deliveryTime,courierName);
+        orderService.insertDelivery(delivery);
+
+
+
     }
 
     @PostMapping("updateLineItemCount")
     @ResponseBody
     public Map<String,Integer> updateLineItemCount(@RequestParam Integer lineNumber,Integer count,int orderId,Model model){
-        orderService.updateLineItemCount(lineNumber,count);
-
         Order order = orderService.getOrder(orderId);
         List<LineItem> lineItemList = order.getLineItems();
         Map<String,Integer> map = new HashMap<>();
+        int stockQuantity = 0;
 
         int totalPrice = 0;
         int totalCount = 0;
@@ -174,10 +176,20 @@ public class OrderController {
             int quantity = (l.getLineNumber()==lineNumber)?count:l.getQuantity();
             totalPrice = totalPrice + unitPrice.intValue() * quantity;
             totalCount += quantity;
+
+            if(l.getLineNumber()==lineNumber){
+                stockQuantity = l.getItem().getStockQuantity()+l.getQuantity()-count;
+                System.out.println("stock来咯" + l.getItemId() + "继续 " + stockQuantity);
+                catalogService.updateStockQuantity(l.getItemId(),stockQuantity);
+            }
+
         }
 
+        String stock = String.valueOf(stockQuantity);
+        orderService.updateLineItemCount(lineNumber,count);
         map.put("totalPrice",totalPrice);
         map.put("totalCount",totalCount);
+        map.put("stockQuantity",stockQuantity);
         orderService.updateTotalPrice(orderId,totalPrice);
 
         return map;

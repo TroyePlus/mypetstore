@@ -173,4 +173,12 @@ from orders o,orderstatus os,lineitem l NATURAL JOIN item i NATURAL JOIN product
     <update id="updateTotalPrice" parameterType="int">
         update orders set totalprice = #{totalPrice} where orderid = #{orderId}
     </update>
+
+    <insert id="insertDelivery" parameterType="Delivery">
+        insert into delivery values(#{orderId},#{courierName},#{deliveryTime})
+    </insert>
+
+    <select id="getDeliveryByOrderId" parameterType="int" resultType="Delivery">
+        select * from delivery where orderid = #{orderId}
+    </select>
 </mapper>

@@ -13,6 +13,11 @@ public class Label {
 
     }
 
+    public Label(String label, int count) {
+        this.label = label;
+        this.count = count;
+    }
+
     public int getCount() {
         return count;
     }

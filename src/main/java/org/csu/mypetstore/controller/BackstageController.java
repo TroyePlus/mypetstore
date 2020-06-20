@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
     @RequestMapping("/backstage/")
@@ -89,6 +86,36 @@ public class BackstageController {
 
 
         switch (cid){
+            case "transaction.html":
+                //统计信息
+                Map<Integer,Integer> map = new HashMap<>();
+                Map<Integer,Integer> tobedeliveredMap = new HashMap<>();
+                Map<Integer,Integer> deliveredMap = new HashMap<>();
+
+                //初始化
+                for(int i =1 ;i<=6;i++){
+                    map.put(i,0);
+                    tobedeliveredMap.put(i,0);
+                    deliveredMap.put(i,0);
+                }
+
+
+                for(Order o :allOrders){
+                    map.put(o.getOrderDate().getMonth()+1,map.get(o.getOrderDate().getMonth()+1) + 1);
+                    switch (o.getStatus()){
+                        //case "已完成":completedOrder.add(o.getOrderId());break;
+                        case "待发货":tobedeliveredMap.put(o.getOrderDate().getMonth()+1,tobedeliveredMap.get(o.getOrderDate().getMonth()+1) + 1);break;
+                        case "已发货":deliveredMap.put(o.getOrderDate().getMonth()+1,deliveredMap.get(o.getOrderDate().getMonth()+1) + 1);break;
+                        //case "待付款":topayOrder.add(o.getOrderId());break;
+                    }
+                }
+
+                model.addAttribute("allMap",map);
+                model.addAttribute("deliveredMap",deliveredMap);
+                model.addAttribute("tobedeliveredMap",tobedeliveredMap);
+
+
+                break;
             case "Order_handling.html":
                 List<Integer> completedOrder = new ArrayList<>();
                 List<Integer> tobereceivedOrder = new ArrayList<>();
@@ -170,6 +197,11 @@ public class BackstageController {
 //            processProductDescription(product);
 //
 //        }
+
+        //添加发货信息
+        Delivery delivery = orderService.getDeliveryByOrderId(orderId);
+        model.addAttribute("delivery",delivery);
+
         model.addAttribute("order",order);
         model.addAttribute("lineItemList",lineItemList);
 
