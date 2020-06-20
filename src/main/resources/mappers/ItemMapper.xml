@@ -15,6 +15,12 @@
     WHERE ITEMID = #{itemId}
     </select>
 
+    <update id="updateInventoryItemId" parameterType="string">
+        update inventory
+        set itemid = #{id}
+        where itemid = #{initId}
+    </update>
+
     <select id="getItemListByProduct" parameterType="string" resultType="item">
     SELECT
       I.ITEMID,
@@ -23,7 +29,8 @@
       SUPPLIER AS supplierId,
       I.PRODUCTID AS "product.productId",
       NAME AS "product.name",
-      DESCN AS "product.description",
+      IMAGE as "product.descriptionImage",
+      TEXT as "product.descriptionText",
       CATEGORY AS "product.categoryId",
       STATUS,
       ATTR1 AS attribute1,
@@ -44,7 +51,8 @@
             SUPPLIER AS supplierId,
             I.PRODUCTID AS "product.productId",
             NAME AS "product.name",
-            DESCN AS "product.description",
+            IMAGE as "product.descriptionImage",
+            TEXT as "product.descriptionText",
             CATEGORY AS "product.categoryId",
             STATUS,
             ATTR1 AS attribute1,
@@ -67,7 +75,8 @@
       SUPPLIER AS supplierId,
       I.PRODUCTID AS "product.productId",
       NAME AS "product.name",
-      DESCN AS "product.description",
+      IMAGE as "product.descriptionImage",
+      TEXT as "product.descriptionText",
       CATEGORY AS "product.categoryId",
       STATUS,
       ATTR1 AS attribute1,
@@ -94,10 +103,15 @@
         select p.category from item i NATURAL join product p where i.itemid = #{itemId}
     </select>
 
+    <select id="getProductIdByItemId" parameterType="string" resultType="string">
+        select productid from item where itemid = #{itemId}
+    </select>
+
     <insert id="insertItem" parameterType="Item">
         insert into item
-        (itemid, stockquantity, productid, listprice, unitcost, supplier, status, attr1)
-        values (#{itemId}, #{stockQuantity}, #{productId}, #{listPrice}, #{unitCost}, #{supplierId}, #{status}, #{attribute1})
+        (itemid, stockquantity, productid, listprice, unitcost, supplier, status, attr1,attr2,attr3)
+        values (#{itemId}, #{stockQuantity}, #{productId}, #{listPrice}, #{unitCost}, #{supplierId}, #{status}, #{attribute1}
+        , #{attribute2}, #{attribute3})
     </insert>
 
     <insert id="insertInventoryRecord">
@@ -106,26 +120,32 @@
         values (#{itemId},#{quantity})
     </insert>
 
-    <update id="updateItem" parameterType="Item">
+    <update id="updateItem">
         update item
         <set>
-            <if test="productId != null">
-                productid = #{productId},
+            <if test="item.itemId != null">
+                itemid = #{item.itemId},
             </if>
-            <if test="listPrice !=null">
-                listprice = #{listPrice},
+            <if test="item.productId != null">
+                productid = #{item.productId},
             </if>
-            <if test="unitCost != null">
-                unitcost = #{unitCost},
+            <if test="item.listPrice !=null">
+                listprice = #{item.listPrice},
             </if>
-            <if test="supplierId != null">
-                supplier = #{supplierId},
+            <if test="item.unitCost != null">
+                unitcost = #{item.unitCost},
             </if>
-            <if test="status != null">
-                status = #{status},
+            <if test="item.status != null">
+                status = #{item.status},
             </if>
-            <if test="attribute1 != null">
-                atrr1 = #{attribute1},
+            <if test="item.attribute1 != null">
+                attr1 = #{item.attribute1},
+            </if>
+            <if test="item.attribute2 != null">
+                attr2 = #{item.attribute2},
+            </if>
+            <if test="item.attribute3 != null">
+                attr3 = #{item.attribute3},
             </if>
         </set>
         where itemid = #{itemId}

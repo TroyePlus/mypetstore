@@ -54,7 +54,7 @@ public class CatalogController {
         if(itemId!=null){
             Item item = catalogService.getItem(itemId);
             Product product = item.getProduct();
-            processProductDescription(product);
+//            processProductDescription(product);
             model.addAttribute("item",item);
             model.addAttribute("product",product);
         }

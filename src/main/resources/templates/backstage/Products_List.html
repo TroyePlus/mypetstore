@@ -4,32 +4,46 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <title>产品管理</title>
+    <title>商品管理</title>
     <link type="text/css" href="../layui/css/layui.css" rel="stylesheet">
     <script type="text/javascript" src="../layui/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="../layui/layui.js"></script>
 </head>
 <body>
 <div class="layui-row">
-    Item ID:
     <div class="layui-input-inline">
         <input type="text" name="typeSearch" id="input" lay-verify="required"
-               placeholder="请输入" autocomplete="off" class="layui-input">
+               placeholder="请输入商品编号" autocomplete="off" class="layui-input">
     </div>
-    <button class="layui-btn" id="search" lay-event="edit"><i class="layui-icon">&#xe615;</i></button>
+    <button class="layui-btn" id="search" ><i class="layui-icon">&#xe615;</i></button>
+</div>
+<table class="layui-table" id="table" lay-filter="handle">
+</table>
 
-<!--    行操作-->
+<!--   表操作-->
 <script type="text/html" id="custom_toolbar">
     <button class="layui-btn" lay-event="refresh"><i class="layui-icon">&#xe9aa;</i></button>
     <button class="layui-btn" lay-event="add"><i class="layui-icon">添加商品</i></button>
-    <button class="layui-btn" lay-event="delete_batch"><i class="layui-icon">批量删除</i></button>
+    <button class="layui-btn layui-btn-danger" lay-event="delete_batch"><i class="layui-icon">批量删除</i></button>
 </script>
-</div>
-<table class="layui-table" id="table" lay-filter="handle" style="width: 800px">
-</table>
-<div id="page"></div>
-<!--// id和toolbar 属性绑定-->
+
+<!-- 上架/下架模板 -->
+<script type="text/html" id="statusTool">
+    {{#  if(d.status == 'P'){ }}
+    <span class="layui-btn layui-btn-normal layui-btn-xs">已上架</span>
+    {{#  } else if(d.status == 'T') { }}
+    <span class="layui-btn  layui-btn-warm  layui-btn-xs">已下架</span>
+    {{#  } }}
+</script>
+
+<!--行操作-->
+<!--id和toolbar 属性绑定-->
 <script type="text/html" id="barList">
+{{#  if(d.status == 'P'){ }}
+<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="take_off">下架</a>
+{{#  } else if(d.status == 'T') { }}
+<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="put_away">上架</a>
+{{#  } }}
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -50,16 +64,22 @@
             , cols: [
                 [
                     {checkbox: true, fixed: true}
-                    , {field: 'itemId', title: 'Item ID', width: 100, sort: true, fixed: 'left'}
-                    , {field: 'd.product.productId  ', title: 'Product ID', width: 120, sort: true,
+                    , {field: 'itemId', title: 'Item ID', width: 100, fixed: 'left'}
+                    , {field: 'd.product.productId  ', title: 'Product ID', width: 120,
                         templet:'<div>{{d.product.productId}}</div>'}
-                    , {field: 'd.product.name', title: 'Product Name', width: 150, sort: true,
+                    , {field: 'd.product.name', title: 'Product Name', width: 150,
                         templet:'<div>{{d.product.name}}</div>'}
-                    , {field: 'listPrice', title: 'Price', width: 80, sort: true}
-                    , {field: 'attribute1', title: 'Attribute', width: 100}
-                    , {fixed: 'right', title:'操作', toolbar: '#barList', width:150,align:'center'}
+                    , {field: 'listPrice', title: '标价', width: 80, sort: true}
+                    , {field: 'unitCost', title: '成本价', width:100, sort: true}
+                    , {field: 'attribute1', title: 'Attribute', width: 200}
+                    , {field: 'status', title: '状态', width: 80, align:'center',
+                        templet:'#statusTool'}
+                    , {fixed: 'right', title:'操作', toolbar: '#barList', width:200,align:'center'}
                 ]
             ],
+            text :{
+                none: '暂未查询到相关数据'
+            },
             request: {
                 pageName: 'pn', //页码的参数名称，默认：page
                 limitName: 'ps', //每页数据量的参数名，默认：limit
@@ -75,8 +95,9 @@
 
         });
         $('#search').on('click',function () {
-            var input = $.trim($("#input").val());
-            search_reload(input);
+            // var input = $.trim($("#input").val());
+            // search_reload(input);
+            search_reload_input();
         });
 
         // $('#input').keydown(function (event) {
@@ -85,6 +106,10 @@
         //        search_reload();
         //     }
         // });
+
+        function search_reload_input(){
+            search_reload($.trim($("#input").val()));
+        }
 
         function search_reload(input) {
             table.reload('itemsReload',{
@@ -105,6 +130,7 @@
                 input.focus();          //输入框获取焦点
                 // input.requestFocus();
             }else if(obj.event == 'add'){
+                item_add();
 
             }else if(obj.event == 'delete_batch'){
                 delete_in_batches();
@@ -117,13 +143,114 @@
         //处理操作
         table.on('tool(handle)',function (obj) {
             var data = obj.data;
-            if(obj.event == 'edit'){
-
-            }else if(obj.event == 'del'){
-                item_delete(obj,data.itemId);
+            switch (obj.event) {
+                case "put_away":
+                    update_status('确认要上架该商品吗?',obj,'P');
+                    console.log(obj.data);
+                    break;
+                case "take_off":
+                    update_status('确认要下架该商品吗?',obj,'T');
+                    break;
+                case "edit":
+                    item_edit(data);
+                    break;
+                case "del": item_delete(obj,data.itemId);
+                    break;
             }
         });
 
+        //改变商品状态
+        function  update_status(str,obj,status) {
+            var data = obj.data;
+            layer.confirm(str,function(index){
+                $.ajax({
+                    type: "patch",
+                    async: true,
+                    url: "/backstage/items",
+                    data: {
+                        "itemId" : data.itemId,
+                        "status" : status
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        if(result.status==1){
+                            layer.close(index);
+                            data.status = status;
+                            obj.update(obj.data);
+
+                            var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+                            var toolbars = tr.find(".layui-table-col-special").find(".laytable-cell-1-0-8");
+                            var stateCol = tr.find(".laytable-cell-1-0-7");
+
+                            //修改DOM
+                            if(status=="P") {
+                                stateCol.html('<span class="layui-btn layui-btn-normal layui-btn-xs">已上架</span>');
+                                toolbars.find(".layui-btn-primary").remove();
+                                toolbars.prepend('<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="take_off">下架</a>');
+                            }
+                            else {
+                                stateCol.html('<span class="layui-btn layui-btn-warm layui-btn-xs">已下架</span>');
+                                toolbars.find(".layui-btn-warm").remove();
+                                toolbars.prepend('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="put_away">上架</a>');
+                            }
+                            layer.msg('操作成功!',{icon:6,time:1000});
+                        }
+                        else{
+                            layer.close(index);
+                            layer.msg('操作失败,请稍后再试!',{icon:5,time:1000});
+                        }
+                    },
+                    error: function(errorMsg) {
+                        //请求失败时执行该函数
+                        console.log(errorMsg);
+                        layer.close(index);
+                        layer.msg('操作失败，请稍后再试!',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
+
+        var isSave; //是否保存
+        //编辑商品
+        function item_edit(data) {
+            layer.open({
+                type: 2,
+                area: ['700px', '500px'],
+                fix: false, //不固定
+                maxmin: true,
+                shade:0.8,
+                title: '修改商品信息',
+                content: '../html/item_edit.html',
+                success: function (layero,index) {
+                    // var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']];
+                    iframeWin.init(data);
+                },
+                end: function () {
+                    if(isSave==1) {         //如果修改保存成功
+                        search_reload_input();
+                    }
+                }
+            });
+        }
+
+        function item_add() {
+            layer.open({
+                type: 2,
+                area: ['850px', '500px'],
+                fix: false, //不固定
+                maxmin: true,
+                shade:0.8,
+                title: '添加商品',
+                content: '../html/item_add.html',
+                success: function (layero,index) {
+                    var iframeWin = window[layero.find('iframe')[0]['name']];
+                    iframeWin.init();
+                }
+            });
+        }
+
+        //删除某一商品
         function item_delete(obj,id) {
             layer.confirm('确认要删除吗？',function(index){
                 $.ajax({
@@ -137,17 +264,21 @@
                     success: function (result) {
                         if(result.status==1){
                             // obj.del();      //删除对应行（tr）的DOM结构，并更新缓存
+                            layer.close(index);
                             layer.msg('已删除!',{icon:1,time:1000});
-                            search_reload(null);
+                            // search_reload($.trim($("#input").val()));
+                            search_reload_input();
                         }
                         else{
+                            layer.close(index);
                             layer.msg('删除失败,请稍后再试!',{icon:2,time:1000});
                         }
                     },
                     error: function(errorMsg) {
                         //请求失败时执行该函数
                         console.log(errorMsg);
-                        layer.msg('删除失败,请稍后再试!',{icon:2,time:1000});
+                        layer.close(index);
+                        layer.msg('请求失败，请稍后再试!',{icon:2,time:1000});
                     }
                 });
             });

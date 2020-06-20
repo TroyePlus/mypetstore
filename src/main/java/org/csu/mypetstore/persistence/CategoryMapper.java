@@ -10,7 +10,7 @@ public interface CategoryMapper {
 
     List<Category> getCategoryList();
 
-    List<String> getCategoryId();
+    List<String> getAllCategoryId();
 
     Category getCategory(String categoryId);
 

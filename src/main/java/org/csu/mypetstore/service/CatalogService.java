@@ -1,5 +1,6 @@
 package org.csu.mypetstore.service;
 
+import cn.hutool.core.util.StrUtil;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Label;
@@ -32,8 +33,8 @@ public class CatalogService {
         return categoryMapper.getCategoryList();
     }
 
-    public List<String> getCategoryId(){
-        return categoryMapper.getCategoryId();
+    public List<String> getAllCategoryId(){
+        return categoryMapper.getAllCategoryId();
     }
 
     public Category getCategory(String categoryId) {
@@ -69,8 +70,8 @@ public class CatalogService {
         return product==null ? 0 : productMapper.insertProduct(product);
     }
 
-    public int updateProduct(Product product){
-        return product==null ? 0 : productMapper.updateProduct(product);
+    public int updateProduct(Product product, String productId){
+        return product==null ? 0 : productMapper.updateProduct(product,productId);
     }
 
     public int deleteProduct(String productId){
@@ -91,15 +92,27 @@ public class CatalogService {
     }
 
     @Transactional
-    public void insertItem(Item item, int quantity){
-        itemMapper.insertItem(item);
-        itemMapper.insertInventoryRecord(item.getItemId(),quantity);
+    public int insertItem(Item item){
+        if(StrUtil.isBlank(item.getItemId()) || StrUtil.isBlank(item.getProductId())
+        || item.getQuantity()<=1)
+            return 0;
+
+        item.setStockQuantity(item.getQuantity());
+        itemMapper.insertInventoryRecord(item.getItemId(),item.getQuantity());
+        return itemMapper.insertItem(item);
     }
 
-    public int updateItem(Item item){
-         return itemMapper.updateItem(item);
+    @Transactional
+    public int updateItem(Item item, String itemId){
+        if(itemId==null||itemId.isEmpty() )
+            return 0;
+        String id = item.getItemId();
+        if(!id.equals(itemId))    //如果改变了itemId
+            itemMapper.updateInventoryItemId(id, itemId);
+        return itemMapper.updateItem(item, itemId);
     }
 
+    //更新商品状态(上架/下架): P--上架, T--下架
     public int updateItemStatus(String itemId, String status){
         if(itemId==null || itemId.isEmpty()){
             return 0;
@@ -108,13 +121,14 @@ public class CatalogService {
             return 0;
         }
 
-        return status.equals("P") || status.equals("S") ? itemMapper.updateItemStatus(itemId,status) : 0;
+        return status.equals("P") || status.equals("T") ? itemMapper.updateItemStatus(itemId,status) : 0;
     }
 
     public int deleteItem(String itemId){
         return itemId ==null || itemId.isEmpty() ? 0 : itemMapper.deleteItem(itemId);
     }
 
+    @Transactional
     public int deleteItems(List<String> idList){
         return idList == null || idList.isEmpty() ? 0 : itemMapper.deleteItems(idList);
     }
@@ -137,6 +151,10 @@ public class CatalogService {
         return productMapper.getProductListWithName(searchName);
     }
 
+    public List<String> getAllProductId(){
+        return productMapper.getAllProductId();
+    }
+
     public List<Label> getItemCountGroupByProductId() {
         return productMapper.getItemCountByProductId();
     }
@@ -145,6 +163,9 @@ public class CatalogService {
 
     public void updateStockQuantity(String itemId,int decreaseQuantity){itemMapper.updateStockQuantity(itemId,decreaseQuantity);}
 
-    //
     public String getCategoryByItemId(String itemId){return itemMapper.getCategoryByItemId(itemId);}
+
+    public String getProductIdByItemId(String itemId){
+        return itemMapper.getProductIdByItemId(itemId);
+    }
 }

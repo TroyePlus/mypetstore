@@ -13,6 +13,8 @@ public interface ItemMapper {
 
     int getInventoryQuantity(String itemId);
 
+    int updateInventoryItemId(@Param("id")String id, @Param("initId")String initId);
+
     List<Item> getItemListByProduct(String productId);
 
     List<Item> getItemListWithItemId(String itemId);
@@ -25,11 +27,13 @@ public interface ItemMapper {
 
     String getCategoryByItemId(String itemId);
 
+    String getProductIdByItemId(String itemId);
+
     int insertItem(Item item);
 
     int insertInventoryRecord(@Param("itemId")String itemId,@Param("quantity")int quantity);
 
-    int updateItem(Item item);
+    int updateItem(@Param("item")Item item, @Param("itemId")String itemId);
 
     int updateItemStatus(@Param("itemId")String itemId,@Param("status")String status);
 

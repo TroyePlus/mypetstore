@@ -1,5 +1,6 @@
 package org.csu.mypetstore.persistence;
 
+import org.csu.mypetstore.controller.CatalogController;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
 import org.csu.mypetstore.domain.Label;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,18 @@ public class BackProductTest {
         Product product = productMapper.getProduct("AA-BB-00");
         product.setName("update_product");
         product.setDescription("Test to update the product.");
-        productMapper.updateProduct(product);
+        productMapper.updateProduct(product,"aaa");
+    }
+
+    @Test
+    public void testPro_changeDescn(){
+       List<Product> products = productMapper.getProductListWithName(null);
+
+        CatalogController.processProductDescription(products);
+
+        for(Product product : products)
+            productMapper.updateDescn(product.getProductId(),product.getDescriptionImage(),
+                    product.getDescriptionText());
     }
 
     @Test
@@ -82,7 +95,7 @@ public class BackProductTest {
 
     @Test
     void testPro_getCatId(){
-        System.out.println(categoryMapper.getCategoryId());
+        System.out.println(categoryMapper.getAllCategoryId());
     }
 
     @Test
@@ -97,21 +110,36 @@ public class BackProductTest {
         item.setStockQuantity(10);
         item.setProductId("AV-CB-01");
         item.setSupplierId(2);
-        Assert.isTrue(itemMapper.insertItem(item)==1,"Item插入失败");
-        itemMapper.insertInventoryRecord(item.getItemId(),10000);
+        itemMapper.insertItem(item);
+        itemMapper.insertInventoryRecord(item.getItemId(),500);
+    }
+
+    @Test
+    public void testItem_productId(){
+        System.out.println(itemMapper.getProductIdByItemId("AAA-01"));
     }
 
     @Test
     public void testItem_update(){
-        Item item = itemMapper.getItem("AAA-01");
-        item.setProductId("FI-FW-01");
-        itemMapper.updateItem(item);
+        String initId = "CCC-03";
+        Item item = itemMapper.getItem(initId);
+        String id = "CCC-04";
+        item.setItemId(id);
+        item.setProductId("FI-SW-02");
+        item.setListPrice(new BigDecimal("66.00"));
+        item.setUnitCost(new BigDecimal("44.00"));
+        item.setStatus("T");
+        item.setAttribute1("B");
+        item.setAttribute2("C");
+        item.setAttribute3("D");
+        itemMapper.updateItem(item,initId);
+        itemMapper.updateInventoryItemId(id,initId);
     }
 
     @Test
     void test_updateStatus()
     {
-        System.out.println(itemMapper.updateItemStatus("black","S"));
+        System.out.println(itemMapper.updateItemStatus("black","T"));
     }
 
     @Test void testItem_delete(){

@@ -99,13 +99,13 @@ public class BackstageController {
 
         List<LineItem> lineItemList = order.getLineItems();
 
-        for (LineItem l :lineItemList
-             ) {
-            Item item = l.getItem();
-            Product product = item.getProduct();
-            processProductDescription(product);
-
-        }
+//        for (LineItem l :lineItemList
+//             ) {
+//            Item item = l.getItem();
+//            Product product = item.getProduct();
+//            processProductDescription(product);
+//
+//        }
         model.addAttribute("order",order);
         model.addAttribute("lineItemList",lineItemList);
 
@@ -200,21 +200,10 @@ public class BackstageController {
         return labels;
     }
 
-    @GetMapping("newProductForm")
-    public String newProductForm(){
-        return "backstage/Add_Brand";
-    }
-
-    @GetMapping("editProductForm")
-    public String editProductForm(String productId, Model model){
-        if(productId!=null) {
-            Product product = catalogService.getProduct(productId);
-            CatalogController.processProductDescription(product);
-            List<String> catIdList = catalogService.getCategoryId();
-            model.addAttribute("product",product);
-            model.addAttribute("catIdList",catIdList);
-        }
-        return "backstage/product-edit";
+    @GetMapping("categories/idList")
+    @ResponseBody
+    public List<String> getAllCategoryId(){
+        return catalogService.getAllCategoryId();
     }
 
     /*
@@ -223,30 +212,24 @@ public class BackstageController {
      */
     @GetMapping("products")
     @ResponseBody
-    public PageInfo<Product> getProductWithName(@RequestParam(required = false, defaultValue ="1",value = "pn")Integer pn,
-                                                @RequestParam(required = false, defaultValue ="10",value = "ps")Integer ps,
-                                                @RequestParam("name")String name){
+    public Map<String,Object> getProductWithName(@RequestParam(required = false, defaultValue ="1",value = "pn")int pn,
+                                                @RequestParam(required = false, defaultValue ="10",value = "ps")int ps,
+                                                @RequestParam(required = false, value="name")String name){
         PageHelper.startPage(pn, ps);
         //startPage后紧跟的这个查询就是分页查询
         List<Product> products = catalogService.getProductWithName(name);
 
-        //处理Description
-        CatalogController.processProductDescription(products);
+        Map<String,Object> map = new HashMap<>();
 
-        //使用PageInfo包装查询结果，只需要将pageInfo交给页面就可以
-        //pageINfo封装了分页的详细信息，也可以指定连续显示的页数
-        return new PageInfo<>(products, 5);
-    }
-
-    @PostMapping("editProduct")
-    public Map<String,Object> editProduct(Product product){
-        int status = catalogService.updateProduct(product);
-        Map<String,Object> resultMap = new HashMap<>();
-        resultMap.put("status",status);
-        return resultMap;
+        int status = products == null || products.isEmpty() ? 0 : 1;
+        PageInfo<Product> pageInfo = new PageInfo<>(products, 5);
+        map.put("status",status);
+        map.put("pageInfo",pageInfo);
+        return map;
     }
 
     @PostMapping("products")
+    @ResponseBody
     public Map<String,Object> addProduct(Product product){
         int status = catalogService.insertProduct(product);
         Map<String,Object> resultMap = new HashMap<>();
@@ -263,6 +246,26 @@ public class BackstageController {
         return resultMap;
     }
 
+    @PutMapping("products")
+    @ResponseBody
+    public Map<String,Object> editProduct(Product product, String initId){
+        int status = catalogService.updateProduct(product, initId);
+        Map<String,Object> resultMap = new HashMap<>();
+        resultMap.put("status",status);
+        return resultMap;
+    }
+
+    @GetMapping("products/idList")
+    @ResponseBody
+    public List<String> getAllProductId(){
+//        Map<String,Object> map = new HashMap<>();
+//        String pId = catalogService.getProductIdByItemId(itemId);
+        List<String> idList = catalogService.getAllProductId();
+//        map.put("pId",pId);
+//        map.put("idList",idList);
+        return idList;
+    }
+
     @GetMapping("items")
     @ResponseBody
     public Map<String,Object> getItems(@RequestParam(required = false, defaultValue ="1",value = "pn")int pn,
@@ -277,14 +280,23 @@ public class BackstageController {
         PageInfo<Item> pageInfo;
         if(items == null || items.isEmpty()){
             status = 0;
-            pageInfo = null;
+//            pageInfo = null;
         }
         else{
             status =1;
-            pageInfo = new PageInfo<>(items, 5);
         }
+        pageInfo = new PageInfo<>(items, 5);
         map.put("status",status);
         map.put("pageInfo",pageInfo);
+        return map;
+    }
+
+    @PatchMapping("items")
+    @ResponseBody
+    public Map<String,Object> updateItemStatus(String itemId, String status){
+        Map<String,Object> map = new HashMap<>();
+        int code = catalogService.updateItemStatus(itemId,status);
+        map.put("status",code);
         return map;
     }
 
@@ -297,9 +309,23 @@ public class BackstageController {
         return map;
     }
 
-    @GetMapping("testForm")
-    public String testForm(){
-        return "backstage/test";
+    @PutMapping("items")
+    @ResponseBody
+    public Map<String,Object> updateItem(Item item,
+                                         String initId){
+        Map<String,Object> map = new HashMap<>();
+        int status = catalogService.updateItem(item, initId);
+        map.put("status",status);
+        return map;
+    }
+
+    @PostMapping("items")
+    @ResponseBody
+    public Map<String,Object> addItem(Item item){
+        Map<String,Object> map = new HashMap<>();
+        int status = catalogService.insertItem(item);
+        map.put("status", status);
+        return map;
     }
 
     @GetMapping("/help")

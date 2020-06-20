@@ -21,7 +21,7 @@
 
     </select>
 
-    <select id="getCategoryId" resultType="string">
+    <select id="getAllCategoryId" resultType="string">
         select catid from category
     </select>
 
