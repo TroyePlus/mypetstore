@@ -77,16 +77,80 @@ public class BackstageController {
     //查看视图，也即iframe
     @GetMapping("view")
     public String view_order(@RequestParam String cid,Model model){
-        if(true){
-            List<Order> allOrders = orderService.getAllOrders();
-            List<Integer> orderIdList = new ArrayList<>();
+        List<Order> allOrders = orderService.getAllOrders();
+        List<Integer> orderIdList = new ArrayList<>();
 
-            for(Order o: allOrders) {
-                orderIdList.add(o.getOrderId());
-            }
+        for(Order o: allOrders) {
+            orderIdList.add(o.getOrderId());
+        }
 
-            model.addAttribute("allOrders",allOrders);
-            model.addAttribute("orderIdList",orderIdList);
+        model.addAttribute("allOrders",allOrders);
+        model.addAttribute("orderIdList",orderIdList);
+
+
+        switch (cid){
+            case "Order_handling.html":
+                List<Integer> completedOrder = new ArrayList<>();
+                List<Integer> tobereceivedOrder = new ArrayList<>();
+                List<Integer> tobedeliveredOrder = new ArrayList<>();
+                List<Integer> topayOrder = new ArrayList<>();
+
+                for(Order o: allOrders) {
+                    switch (o.getStatus()){
+                        case "已完成":completedOrder.add(o.getOrderId());break;
+                        case "待发货":tobedeliveredOrder.add(o.getOrderId());break;
+                        case "待收货":tobereceivedOrder.add(o.getOrderId());break;
+                        case "待付款":topayOrder.add(o.getOrderId());break;
+                    }
+                }
+
+                model.addAttribute("completedOrder",completedOrder);
+                model.addAttribute("tobedeliveredOrder",tobedeliveredOrder);
+                model.addAttribute("tobereceivedOrder",tobereceivedOrder);
+                model.addAttribute("topayOrder",topayOrder);
+
+
+
+                break;
+            case "Orderform.html":
+                //分别获取五个种类的orderlist
+                List<Order> birdsList = orderService.getOrdersByCategory("BIRDS");
+                List<Order> fishList = orderService.getOrdersByCategory("FISH");
+                List<Order> catsList = orderService.getOrdersByCategory("CATS");
+                List<Order> dogsList = orderService.getOrdersByCategory("DOGS");
+                List<Order> reptilesList = orderService.getOrdersByCategory("REPTILES");
+
+                List<Integer> birdsIdList = new ArrayList<>();
+                List<Integer> catsIdList = new ArrayList<>();
+                List<Integer> fishIdList = new ArrayList<>();
+                List<Integer> dogsIdList = new ArrayList<>();
+                List<Integer> reptilesIdList = new ArrayList<>();
+
+                for(Order o: catsList) {
+                    catsIdList.add(o.getOrderId());
+                }
+                for(Order o: fishList) {
+                    fishIdList.add(o.getOrderId());
+                }
+                for(Order o: dogsList) {
+                    dogsIdList.add(o.getOrderId());
+                }
+                for(Order o: reptilesList) {
+                    reptilesIdList.add(o.getOrderId());
+                }
+
+
+                for(Order o: birdsList) {
+                    birdsIdList.add(o.getOrderId());
+                }
+
+                model.addAttribute("birdsIdList",birdsIdList);
+                model.addAttribute("catsIdList",catsIdList);
+                model.addAttribute("dogsIdList",dogsIdList);
+                model.addAttribute("fishIdList",fishIdList);
+                model.addAttribute("reptilesIdList",reptilesIdList);
+
+                break;
         }
 
         return "backstage/"+cid;
@@ -117,14 +181,6 @@ public class BackstageController {
     @GetMapping("categoryCount")
     @ResponseBody //返回前端JSON数据
     public Map<String, Integer> category(Model model,HttpSession session){
-//        List<Label> categoryLabel = new ArrayList<>();
-//        //初始化五个标签
-//        categoryLabel.add(new Label("BIRDS"));
-//        categoryLabel.add(new Label("FISH"));
-//        categoryLabel.add(new Label("CATS"));
-//        categoryLabel.add(new Label("DOGS"));
-//        categoryLabel.add(new Label("REPTILES"));
-
         //初始化五个map
         Map<String,Integer> categoryMap = new HashMap<>();
         categoryMap.put("BIRDS",0);
@@ -140,6 +196,14 @@ public class BackstageController {
         List<Order> catsList = orderService.getOrdersByCategory("CATS");
         List<Order> dogsList = orderService.getOrdersByCategory("DOGS");
         List<Order> reptilesList = orderService.getOrdersByCategory("REPTILES");
+
+        List<Integer> birdsIdList = new ArrayList<>();
+
+        for(Order o: birdsList) {
+            birdsIdList.add(o.getOrderId());
+        }
+
+        model.addAttribute("birdsIdList",birdsIdList);
 
         List<Order> allOrders = orderService.getAllOrders();
         List<Integer> orderIdList = new ArrayList<>();
