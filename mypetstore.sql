@@ -11,7 +11,7 @@
  Target Server Version : 80017
  File Encoding         : 65001
 
- Date: 20/06/2020 14:54:22
+ Date: 21/06/2020 09:41:11
 */
 
 SET NAMES utf8mb4;
@@ -111,17 +111,23 @@ CREATE TABLE `category`  (
   `catid` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `descn` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `text` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`catid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES ('BIRDS', 'Birds', '<image src=\"../images/birds_icon.gif\"><font size=\"5\" color=\"blue\"> Birds</font>');
-INSERT INTO `category` VALUES ('CATS', 'Cats', '<image src=\"../images/cats_icon.gif\"><font size=\"5\" color=\"blue\"> Cats</font>');
-INSERT INTO `category` VALUES ('DOGS', 'Dogs', '<image src=\"../images/dogs_icon.gif\"><font size=\"5\" color=\"blue\"> Dogs</font>');
-INSERT INTO `category` VALUES ('FISH', 'Fish', '<image src=\"../images/fish_icon.gif\"><font size=\"5\" color=\"blue\"> Fish</font>');
-INSERT INTO `category` VALUES ('REPTILES', 'Reptiles', '<image src=\"../images/reptiles_icon.gif\"><font size=\"5\" color=\"blue\"> Reptiles</font>');
+INSERT INTO `category` VALUES ('BIRDS', 'Birds', '<image src=\"../images/birds_icon.gif\"><font size=\"5\" color=\"blue\"> Birds</font>', '../images/birds_icon.gif', 'Birds');
+INSERT INTO `category` VALUES ('CATS', 'Cats', '<image src=\"../images/cats_icon.gif\"><font size=\"5\" color=\"blue\"> Cats</font>', '../images/cats_icon.gif', 'Cats');
+INSERT INTO `category` VALUES ('DOGS', 'Dogs', '<image src=\"../images/dogs_icon.gif\"><font size=\"5\" color=\"blue\"> Dogs</font>', '../images/dogs_icon.gif', 'Dogs');
+INSERT INTO `category` VALUES ('FISH', 'Fish 1', '<image src=\"../images/fish_icon.gif\"><font size=\"5\" color=\"blue\"> Fish</font>', '../images/fish_icon.gif', 'Great Fish');
+INSERT INTO `category` VALUES ('REPTILES', 'Reptiles', '<image src=\"../images/reptiles_icon.gif\"><font size=\"5\" color=\"blue\"> Reptiles</font>', '../images/reptiles_icon.gif', 'Reptiles');
+INSERT INTO `category` VALUES ('Test1', 'test1', NULL, NULL, 'To test fir');
+INSERT INTO `category` VALUES ('Test3', 'test3', NULL, NULL, 'To test4');
+INSERT INTO `category` VALUES ('Test5', 'test5', NULL, NULL, 'To test5');
+INSERT INTO `category` VALUES ('Test6', 'test6', NULL, NULL, 'To test 6th');
 
 -- ----------------------------
 -- Table structure for inventory
@@ -383,7 +389,9 @@ INSERT INTO `product` VALUES ('aaa1', 'FISH', 'Kind Dragon', '../images/lizard1.
 INSERT INTO `product` VALUES ('AV-CB-01', 'BIRDS', 'Amazon Parrot', '../images/bird2.gif', 'Great companion for up to 75 years');
 INSERT INTO `product` VALUES ('AV-SB-02', 'BIRDS', 'Finch', '../images/bird1.gif', 'Great stress reliever');
 INSERT INTO `product` VALUES ('bbb', 'BIRDS', 'Wahana', '../images/bird1.gif', 'Good family birds');
+INSERT INTO `product` VALUES ('ccc', 'DOGS', 'Dog test1', '../images/dog1.gif', 'Good dog for testing');
 INSERT INTO `product` VALUES ('ddd', 'CATS', 'Cat test2', '../images/cat2.gif', 'Great for reducing mouse populations');
+INSERT INTO `product` VALUES ('eee', 'BIRDS', 'bird', NULL, 'Great bird for testing');
 INSERT INTO `product` VALUES ('FI-FW-01', 'FISH', 'Koi', '../images/fish3.gif', 'Fresh Water fish from Japan');
 INSERT INTO `product` VALUES ('FI-FW-02', 'FISH', 'Goldfish', '../images/fish2.gif', 'Fresh Water fish from China');
 INSERT INTO `product` VALUES ('FI-SW-01', 'FISH', 'Angelfish', '../images/fish1.gif', 'Salt Water fish from Australia');
