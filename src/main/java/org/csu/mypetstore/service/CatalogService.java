@@ -7,14 +7,15 @@ import org.csu.mypetstore.domain.Label;
 import org.csu.mypetstore.domain.Product;
 import org.csu.mypetstore.persistence.CategoryMapper;
 import org.csu.mypetstore.persistence.ItemMapper;
-import org.csu.mypetstore.persistence.LineItemMapper;
 import org.csu.mypetstore.persistence.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatalogService {
@@ -37,20 +38,43 @@ public class CatalogService {
         return categoryMapper.getAllCategoryId();
     }
 
+    public List<Map<String,Object>> getAllCatIdTree(){
+        //直接调用`getAllCategoryId()`控制台不会打印sql语句
+        List<String> idList = categoryMapper.getAllCategoryId();
+
+        List<Map<String,String>> childList = new ArrayList<>();
+        Map<String,String> map;
+
+        for(String id : idList){
+            map = new HashMap<>();
+            map.put("id",id);
+            map.put("title",id);
+            childList.add(map);
+        }
+        Map<String,Object> rootNode = new HashMap<>();
+        rootNode.put("title","商城分类列表");
+        rootNode.put("children",childList);
+
+        List<Map<String,Object>> result = new ArrayList<>();
+        result.add(rootNode);
+
+        return result;
+    }
+
     public Category getCategory(String categoryId) {
-        return categoryMapper.getCategory(categoryId);
+        return StrUtil.isBlank(categoryId) ? null : categoryMapper.getCategory(categoryId);
     }
 
-    public void insertCategory(Category category){
-        categoryMapper.insertCategory(category);
+    public int insertCategory(Category category){
+        return category==null ? 0 : categoryMapper.insertCategory(category);
     }
 
-    public void updateCategory(Category category){
-        categoryMapper.updateCategory(category);
+    public int updateCategory(Category category, String id){
+        return StrUtil.isBlank(id) || category==null ? 0 : categoryMapper.updateCategory(category, id);
     }
 
-    public void deleteCategory(String categoryId){
-        categoryMapper.deleteCategory(categoryId);
+    public int deleteCategory(String categoryId){
+        return StrUtil.isBlank(categoryId) ? 0 : categoryMapper.deleteCategory(categoryId);
     }
 
     public Product getProduct(String productId) {
@@ -71,7 +95,7 @@ public class CatalogService {
     }
 
     public int updateProduct(Product product, String productId){
-        return product==null ? 0 : productMapper.updateProduct(product,productId);
+        return StrUtil.isBlank(productId)||product==null ? 0 : productMapper.updateProduct(product,productId);
     }
 
     public int deleteProduct(String productId){

@@ -1,5 +1,6 @@
 package org.csu.mypetstore.persistence;
 
+import com.alibaba.fastjson.JSON;
 import org.csu.mypetstore.controller.CatalogController;
 import org.csu.mypetstore.domain.Category;
 import org.csu.mypetstore.domain.Item;
@@ -28,6 +29,17 @@ public class BackProductTest {
     private CatalogService catalogService;
 
     @Test
+    void test_getCatIdTree(){
+        System.out.println(JSON.toJSONString(catalogService.getAllCatIdTree()));
+    }
+
+    @Test
+    void test_getCat(){
+//        System.out.println(catalogService.getCategory("FISH"));
+        System.out.println(catalogService.getCategoryList());
+    }
+
+    @Test
     void test_getItemListWithStatus(){
         System.out.println(catalogService.getItemListByProduct("AV-CB-01"));
     }
@@ -47,7 +59,7 @@ public class BackProductTest {
         Category category = categoryMapper.getCategory("TEST_CAT");
         category.setName("test_update");
         category.setDescription("Update the category.");
-        categoryMapper.updateCategory(category);
+        categoryMapper.updateCategory(category,"CATS");
     }
 
     @Test

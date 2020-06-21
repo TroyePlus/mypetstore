@@ -298,15 +298,56 @@ public class BackstageController {
         return labels;
     }
 
+    @GetMapping("categories")
+    @ResponseBody
+    public Map<String,Object> getCategory(@RequestParam(required = false, value = "id")String catId){
+        Category category = catalogService.getCategory(catId);
+        int status = category==null ? 0 : 1;
+        Map<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        map.put("data",category);
+
+        return map;
+    }
+
+    @DeleteMapping("categories")
+    @ResponseBody
+    public Map<String,Object> delCategory(String catId){
+        int status = catalogService.deleteCategory(catId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        return map;
+    }
+
+    @PutMapping("categories")
+    @ResponseBody
+    public Map<String,Object> updateCategory(Category category,String initId){
+        int status = catalogService.updateCategory(category,initId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        return map;
+    }
+
+    @PostMapping("categories")
+    @ResponseBody
+    public Map<String,Object> addCategory(Category category){
+        int status = catalogService.insertCategory(category);
+        Map<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        return map;
+    }
+
     @GetMapping("categories/idList")
     @ResponseBody
     public List<String> getAllCategoryId(){
         return catalogService.getAllCategoryId();
     }
 
-//    @GetMapping("categories/idTree")
-//    @ResponseBody
-//    public List<String,>
+    @GetMapping("categories/idTree")
+    @ResponseBody
+    public List<Map<String,Object>> getAllCatIdTree(){
+        return catalogService.getAllCatIdTree();
+    }
 
     /*
         pn-pageNumber

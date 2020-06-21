@@ -158,25 +158,6 @@
 
         });
 
-        /*产品-编辑*/
-        function member_edit(obj) {
-
-            layer.open({
-                type: 2,
-                area: [w + 'px', h + 'px'],
-                fix: false, //不固定
-                maxmin: true,
-                shade: 0.4,
-                title: '修改产品信息',
-                content: '../html/product-edit.html',
-                success: function (layero, index) {
-                    let body = layer.getChildFrame('body', index);
-
-                }
-            });
-            // layer_show(title,'/html/editProductForm?productId'+id,w,h);
-        }
-
     });
 
     layui.use('table', function () {
@@ -280,6 +261,7 @@
             });
         }
 
+        /*产品-编辑*/
         function product_edit(data) {
             layer.open({
                 type: 2,
@@ -425,7 +407,7 @@
                 },
                 error: function (errorMsg) {
                     //请求失败时执行该函数
-                    console.log("图表请求数据失败!");
+                    console.log(errorMsg);
                     myChart.hideLoading();
                 }
             })

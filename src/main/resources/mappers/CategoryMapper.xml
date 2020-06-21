@@ -4,10 +4,11 @@
 
 <mapper namespace="org.csu.mypetstore.persistence.CategoryMapper">
     <select id="getCategory" parameterType="String" resultType="Category">
-        SELECT
+    SELECT
       CATID AS categoryId,
       NAME,
-      DESCN AS description
+      IMAGE,
+      TEXT
     FROM CATEGORY
     WHERE CATID = #{categoryId}
     </select>
@@ -16,7 +17,8 @@
       SELECT
       CATID AS categoryId,
       NAME,
-      DESCN AS description
+      IMAGE,
+      TEXT
     FROM CATEGORY
 
     </select>
@@ -27,18 +29,40 @@
 
     <insert id="insertCategory" parameterType="Category">
         INSERT INTO CATEGORY
-        (CATID, NAME, DESCN)
-        VALUES(#{categoryId}, #{name}, #{description})
+        (CATID, NAME, IMAGE, TEXT)
+        VALUES(#{categoryId}, #{name}, #{image}, #{text})
     </insert>
 
     <update id="updateCategory" parameterType="Category">
-        UPDATE CATEGORY SET
-        NAME = #{name},
-        DESCN = #{description}
-        WHERE CATID = #{categoryId}
+        UPDATE CATEGORY
+        <set>
+            <if test="category.categoryId != null">
+                catid = #{category.categoryId},
+            </if>
+            <if test="category.name != null">
+                name = #{category.name},
+            </if>
+            <if test="category.image != null">
+                image = #{category.image},
+            </if>
+            <if test="category.name != null">
+                text = #{category.text},
+            </if>
+        </set>
+            where CATID = #{id}
     </update>
 
     <delete id="deleteCategory" parameterType="string">
         DELETE FROM CATEGORY WHERE CATID = #{categoryId}
     </delete>
+
+    <update id="updateDescn">
+        update category
+        <set>
+            <if test="image !=null">
+                image = #{image},
+            </if>
+        </set>
+        where catid = #{id}
+    </update>
 </mapper>
